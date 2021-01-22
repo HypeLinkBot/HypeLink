@@ -18,8 +18,8 @@ for (const file of commandFiles) {
 
 function updateStatus() {
     client.user.setActivity({
-        name: "for commands... | www.bonk.ml | " + client.guilds.cache.size + " servers",
-        type: "WATCHING"
+        name: "https://bonk.ml | " + client.guilds.cache.size + " servers 😳",
+        type: "PLAYING"
     })
 }
 
@@ -27,6 +27,15 @@ client.once('ready', () => {
     consola.success(`Logged in as ${client.user.tag}`);
     //client.user.setPresence('www.bonk.ml');
     updateStatus()
+    setInterval(updateStatus, 10000)
+})
+
+client.on('guildCreate', (guild) => {
+    consola.info(`😳 Added to ${guild.name} (${guild.id})`);
+})
+
+client.on('guildDelete', (guild) => {
+    consola.info(`😭 Removed from ${guild.name} (${guild.id})`)
 })
 
 client.on('message', async message => {
