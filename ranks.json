@@ -1,0 +1,43 @@
+{
+    "VIP": {
+        "color": "GREEN",
+        "formatted": "VIP"
+    },
+    "VIP_PLUS": {
+        "color": "GREEN",
+        "formatted": "VIP+"
+    },
+    "MVP": {
+        "color": "#1ba2ff",
+        "formatted": "MVP"
+    },
+    "MVP_PLUS": {
+        "color": "#1ba2ff",
+        "formatted": "MVP+"
+    },
+    "SUPERSTAR": {
+        "color": "#ff9900",
+        "formatted": "MVP++"
+    },
+    "YOUTUBER": {
+        "color": "RED",
+        "formatted": "Hypixel YouTuber"
+    },
+    "HELPER": {
+        "color": "#3d43b9",
+        "formatted": "Hypixel Helper"
+    },
+    "MODERATOR": {
+        "color": "GREEN",
+        "formatted": "Hypixel Moderator"
+    },
+    "ADMIN": {
+        "color": "RED",
+        "formatted": "Hypixel Admin"
+    },
+
+    "verified": {
+        "color": "GRAY",
+        "formatted": "Verified"
+    }
+}

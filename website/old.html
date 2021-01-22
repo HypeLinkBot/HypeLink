@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HypeLink | Verified</title>
+
+    <meta content="HypeLink | Discord & Hypixel Integration" property="og:title">
+    <meta content="Step up your game with a modern voice & text chat app. Crystal clear voice, multiple server and channel support, mobile apps, and more." property="og:description">
+    <meta content="Discord" property="og:site_name">
+    <meta content='https://bonk.ml/circle_256.png' property='og:image'>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+    <style>
+        .vert {
+            vertical-align: middle;
+        }
+        
+        .logoh1 {
+            transform: translateY(-3px);
+        }
+        
+        .ghlogo {
+            transform: translateY(-2px);
+        }
+        
+        .na {
+            text-decoration: none;
+        }
+        
+        .na:hover {
+            text-decoration: underline;
+        }
+        
+        .multi-collapse {
+            background: rgb(228, 228, 228);
+            border-radius: 20px;
+            margin: 10px;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <br>
+    <div class="container-sm">
+        <div class="jumbotron">
+            <h1 class="display-4 vert"><img src='circle_256.png' class='logoh1 vert' height='64px'> HypeLink</h1>
+            <p class="lead">Hypixel & Discord Verification Bot</p>
+            <hr class="my-4">
+            <p>A once private guild Discord bot for linking your Hypixel profile to Discord.</p>
+            <p class="lead">
+                <!--<a class="btn btn-outline-primary btn-lg" href="#" role="button">Learn more</a>-->
+                <a class="btn btn-outline-primary btn-lg" href="/invite" role="button">Invite</a>
+                <a class="btn btn-outline-primary btn-lg disabled vert" href="#" role="button"><img class='vert ghlogo' src='git.png' height='23px'> GitHub</a>
+            </p>
+        </div>
+    </div>
+
+    <div class="container-md">
+        <hr>
+        <div class="jumbotron">
+            <h1 class="display-6 vert">Setup</h1>
+            <p>The default prefix is "!", and can be changed using the command "!prefix"</p>
+            <!--<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="false" aria-controls="multiCollapse1 multiCollapse2">⏩ Express Setup</button>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="false" aria-controls="multiCollapse1 multiCollapse2">♟ Manual Setup</button>
+            -->
+            <div class="collapse multi-collapse show" id="multiCollapse2">
+                <h3>⏩ Express Setup</h3>
+                <i>Use this if you <b>do not</b> have a verified role for your server</i>
+                <br>
+                <p>Running the <b>!setup</b> command will make a Verified role and every Hypixel rank role</p>
+
+                <img src='samp/ez_setup.png'>
+
+                <br>
+                <p>It will automatically create the verified role and the Hypixel rank roles.</p>
+                <img src='samp/roles.png'>
+                <br>
+                <p>You can delete the roles you don't want to use</p>
+            </div>
+
+
+            <div class="collapse multi-collapse show" id="multiCollapse1">
+                <h3>♟ Manual Setup</h3>
+                <i>Use this if you already have a verified role for your server</i>
+                <br>
+                <p>The "!setrole" command will let you set the verified role to a preexisting one.</p>
+                <img src='samp/changever.png'>
+                <br>
+                <br>
+                <p>You can use the "!setrole" command </p>
+                <img src='samp/setrole.png'>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-md">
+        <hr>
+        <div class="jumbotron">
+            <h1 class="display-6 vert">Permissions</h1>
+            <p>
+                <b>Manage Roles</b> - For giving the verified role<br>
+                <b>Manage Nicknames</b><a style='color:red;'>*</a> - Change's the user's nickname once verified<br>
+                <b>Read Messages</b> - Lets the bot check for commands that start with the prefix<br>
+                <b>Send Messages</b> - For responding to bot commands<br>
+                <b>Manage Messages</b><a style='color:red;'>*</a> - idk for this one lmfao<br>
+                <b>Embed Links</b> - Most of the bot's messages are embeds<br>
+                <b>Attach Files</b><a style='color:red;'>*</a> - idrk for this one too<br>
+                <b>Add Reactions</b><a style='color:red;'>*</a> - Makes it obvious that the bot responded to some messages<br>
+                <b>Use External Emojis</b> - Makes the embeds look nicer
+            </p>
+            <i><a style='color:red;'>*</a>Not required</i>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container-sm">
+            <hr>
+            <p class='vert'>
+                Made with 💖 by <a class='na' target='_blank' href='https://namemc.com/profile/foobball.1'>foobball</a>
+            </p>
+        </div>
+    </footer>
+</body>
+
+</html>
