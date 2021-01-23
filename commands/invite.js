@@ -15,7 +15,7 @@ module.exports = {
                 `:pleading_face: **How to Invite**\n` +
                 `${e.bunk} [Click here](${invite_link}) or visit https://bonk.ml/invite\n\n` +
                 `${e.bunk} **Bot Owner:** \`${owner(client).tag}\`\n` +
-                `${e.bunk} *if this tag is invalid, do !inv again*`
+                `${e.bunk} *if this tag is invalid, run this command again*`
             )
         message.author.send(invite).then(() => {
             message.react('👌');

@@ -64,6 +64,9 @@ module.exports = {
         newmsg.edit(new Discord.MessageEmbed()
             .setColor(e.green)
             .setDescription(e.check + ` You were successfully unverified!`)).then(() => {
+
+            db.set('unverified', db.get('unverified') + 1);
+
             if (db.get(`${message.guild.id}.dm_unverify`) == true) {
                 message.author.send(
                     new Discord.MessageEmbed()

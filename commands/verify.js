@@ -124,8 +124,9 @@ module.exports = {
                     .setThumbnail("https://crafatar.com/avatars/" + body.uuid)
                     .setDescription(desc);
 
-                newmsg.edit(successembed);
-
+                newmsg.edit(successembed).then(() => {
+                    db.set('verified', db.get('verified') + 1);
+                });
 
                 if (db.get(`${message.guild.id}.dm_verify`) == true) {
                     message.author.send(

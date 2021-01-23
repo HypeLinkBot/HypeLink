@@ -26,8 +26,17 @@ function updateStatus() {
 client.once('ready', () => {
     consola.success(`Logged in as ${client.user.tag}`);
     //client.user.setPresence('www.bonk.ml');
-    updateStatus()
-    setInterval(updateStatus, 10000)
+    updateStatus();
+    setInterval(updateStatus, 10000);
+
+
+    if (!db.get('verified')) db.set('verified', 0);
+    if (!db.get('unverified')) db.set('unverified', 0);
+
+    db.set('startup', new Date().getTime());
+
+    consola.info(`Total Verified: ${db.get('verified').toLocaleString()}`);
+    consola.info(`Total Unverified: ${db.get('unverified').toLocaleString()}`);
 })
 
 client.on('guildCreate', (guild) => {
