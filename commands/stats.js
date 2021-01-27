@@ -24,10 +24,11 @@ module.exports = {
 
         let datestring = '';
 
-        if (days !== 0) datestring = `${days} day${(days == 1) ? '' : 's'} ago`;
-        else if (hours !== 0) datestring = `${hours} hours${(hours == 1) ? '' : 's'} ago`;
-        else if (minutes !== 0) datestring = `${minutes} minute${(minutes == 1) ? '' : 's'} ago`;
-        else datestring = `${seconds} seconds ago`;
+        if (days !== 0) datestring = `${days} day${(days == 1) ? '' : 's'}`;
+        else if (hours !== 0) datestring = `${hours} hours${(hours == 1) ? '' : 's'}`;
+        else if (minutes !== 0) datestring = `${minutes} minute${(minutes == 1) ? '' : 's'}`;
+        else datestring = `${seconds} second${(seconds == 1) ? '' : 's'}`;
+        datestring += ' ago';
 
         const invite = new Discord.MessageEmbed()
             .setColor('YELLOW')
