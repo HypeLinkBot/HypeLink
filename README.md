@@ -3,7 +3,7 @@ Hypixel and Discord verification bot. (basically HyVerify 2)
 ---
 i started working on bots again and decided to remake hyverify 😳
 
-### Invite the bot to your own server by [clicking here](https://bonk.ml/invite)
+### Invite the bot to your own server by [clicking here](https://bonk.ml/invite) (coming soon)
 
 ### How to run the bot locally:
 
@@ -23,4 +23,4 @@ i started working on bots again and decided to remake hyverify 😳
 ```
 - Use `node app.js` to start the bot
 
-Refer to the bot's Hypixel thread (click here) for the list of commands.
+Refer to the bot's Hypixel thread (coming soon) for the list of commands.
