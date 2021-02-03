@@ -75,8 +75,8 @@ module.exports = {
                     `${e.bunk} **Bot Prefix**: \`${prefix}\`\n` +
                     `${e.bunk} (configure using \`${prefix}prefix\`)\n\n` +
                     `*To change a setting:*\n` +
-                    `${e.bunk} \`${prefix}settings [setting name] [true/false]\`\n` +
-                    `${e.bunk} \`${prefix}settings ChangeNick false\``
+                    `${e.bunk} \`${prefix}set [setting name] [true/false/on/off]\`\n` +
+                    `${e.bunk} \`${prefix}set ChangeNick false\``
                 )
 
             message.channel.send(embed);
@@ -119,7 +119,7 @@ module.exports = {
                         .setColor(e.red)
                         .setDescription(
                             `${e.x} **Invalid Settings Value**\n` +
-                            `${e.bunk} The options are only \`true\` or \`false\`\n\n` +
+                            `${e.bunk} The options are \`true\`, \`false\`, \`on\`, \`off\`\n\n` +
                             `\`${prefix}settings ${args[0]} true\`\n` +
                             `\`${prefix}settings ${args[0]} false\``
                         )
