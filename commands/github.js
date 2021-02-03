@@ -1,21 +1,16 @@
 const Discord = require('discord.js');
-const { invite_link } = require('../config.json');
 const e = require('../embeds.json');
-const owner = require('../lib/owner');
 
 module.exports = {
-    name: 'invite',
-    description: 'DMs you the bot\'s invite link',
+    name: 'github',
+    description: 'DMs you the HypeLink Github link',
     cat: 'other',
-    alias: ['inv', 'i'],
+    alias: ['git', 'g'],
     execute(message, args, client, prefix) {
         const invite = new Discord.MessageEmbed()
-            .setColor('YELLOW')
             .setDescription(
-                `:pleading_face: **How to Invite**\n` +
-                `${e.bunk} [Click here](${invite_link}) or visit https://bonk.ml/invite\n\n` +
-                `${e.bunk} **Bot Owner:** \`${owner(client).tag}\`\n` +
-                `${e.bunk} *if this tag is invalid, run this command again*`
+                `:flushed: **Github Link**\n` +
+                `${e.bunk} https://github.com/foobball/HypeLink`
             )
         message.author.send(invite).then(() => {
             message.react('👌');

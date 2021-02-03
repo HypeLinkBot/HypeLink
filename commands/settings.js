@@ -37,7 +37,7 @@ const dict = {
 module.exports = {
     name: 'settings',
     alias: ['set', 's'],
-    description: 'Change bot settings',
+    description: 'View and change the bot\'s settings',
     cat: 'config',
     async execute(message, args, client, prefix) {
         let setChangenick = db.get(`${message.guild.id}.change_nick`);

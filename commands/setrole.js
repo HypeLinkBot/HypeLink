@@ -6,7 +6,7 @@ const ranks = require('../ranks.json');
 
 module.exports = {
     name: 'setrole',
-    description: 'Set ',
+    description: 'Assign a rank or "verified" to a role',
     alias: ['setroles', 'sr', 'srs'],
     cat: 'settings',
     async execute(message, args, client, prefix) {

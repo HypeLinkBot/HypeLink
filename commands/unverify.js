@@ -6,7 +6,7 @@ const get = require('../lib/getStats');
 
 module.exports = {
     name: 'unverify',
-    description: 'Unverify your Discord',
+    description: 'Unverify yourself',
     cat: 'settings',
     alias: ['unv'],
     async execute(message, args, client, prefix) {

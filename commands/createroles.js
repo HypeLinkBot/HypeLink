@@ -6,7 +6,7 @@ const ranks = require('../ranks.json');
 
 module.exports = {
     name: 'createroles',
-    description: 'Create default rank roles',
+    description: 'Creates default rank roles',
     cat: 'settings',
     alias: ['roles', 'role'],
     async execute(message, args, client, prefix) {

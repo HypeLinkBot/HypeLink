@@ -8,7 +8,7 @@ const ranks = require('../ranks.json')
 
 module.exports = {
     name: 'setup',
-    description: 'Setup the bot itself',
+    description: 'Creates rank roles and verified role',
     alias: [],
     cat: 'settings',
     async execute(message, args, client, prefix) {
@@ -62,7 +62,7 @@ module.exports = {
                     reason: `${message.author.tag}: Hypixel rank roles`
                 })
                 .then((role) => {
-                    console.log(`${message.guild.id}.roles.${rankname}`);
+                    //console.log(`${message.guild.id}.roles.${rankname}`);
                     db.set(`${message.guild.id}.roles.${rankname}`, role.id);
                 })
                 .catch(consola.error);

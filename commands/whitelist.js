@@ -8,7 +8,7 @@ const ranks = require('../ranks.json')
 
 module.exports = {
     name: 'whitelist',
-    description: 'Set whitelisted channel',
+    description: 'Set verification channel',
     cat: 'settings',
     alias: ['wl'],
     async execute(message, args, client, prefix) {
