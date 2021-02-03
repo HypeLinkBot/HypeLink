@@ -16,6 +16,9 @@ i started working on bots again and decided to remake hyverify 😳
   "hypixel_key": "your hypixel api key (do '/api new' in-game)",
   "bot_token": "the discord bot token",
   
+  "report_channel": "channel id of where reports should be sent",
+  "suggest_channel": "channel id of where suggestions should be sent",
+  
   "invite_link": "the full bot invite link (e.g. https://discord.com/api/oauth2/authorize?client_id=478330652119400451&permissions=8&scope=bot)",
   "default_prefix": "!",
   "name": "HypeLink"
