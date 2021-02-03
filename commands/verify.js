@@ -95,17 +95,34 @@ module.exports = {
                 return newmsg.edit(embed);
             }
 
+            let success = true;
             if (role !== undefined && role !== null) {
-                await message.member.roles.add(role);
+                await message.member.roles.add(role).catch(() => {
+                    const embed = new Discord.MessageEmbed()
+                        .setColor(e.red)
+                        .setDescription(`${e.x} **Couldn't give you the Verified role**\n${e.bunk} Make sure the role isn't higher than me :flushed:`);
+
+                    success = false;
+                    return newmsg.edit(embed);
+                });
 
                 if (db.get(`${message.guild.id}.rank_role`) == null || db.get(`${message.guild.id}.rank_role`) == true) {
                     if (body.rank !== null) {
                         let roleid = db.get(`${message.guild.id}.roles.${body.rank}`)
                         if (roleid !== null && roleid !== undefined) {
-                            await message.member.roles.add(roleid);
+                            await message.member.roles.add(roleid).catch(() => {
+                                const embed = new Discord.MessageEmbed()
+                                    .setColor(e.red)
+                                    .setDescription(`${e.x} **Couldn't give you the ${body.rank.replace(/_PLUS/g, '+')} role**\n${e.bunk} Make sure the role isn't higher than me :flushed:`);
+
+                                success = false;
+                                return newmsg.edit(embed);
+                            });
                         }
                     }
                 }
+
+                if (!success) return;
 
                 let desc = `${e.check} **You're all set**!\n${e.bunk} Successfully verified as \`${body.name}\`.\n\n`;
 
@@ -124,6 +141,7 @@ module.exports = {
                     .setThumbnail("https://crafatar.com/avatars/" + body.uuid)
                     .setDescription(desc);
 
+                if (!success) return;
                 newmsg.edit(successembed).then(() => {
                     db.set('verified', db.get('verified') + 1);
                 });

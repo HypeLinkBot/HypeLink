@@ -72,7 +72,7 @@ client.on('message', async message => {
             helplist += `\`${prefix}${cmd.name}\` - ${cmd.description}\n`;
         })
 
-        helplist += `\n<:logo:791084884398702632> Thread: https://example.com/\n<:hypelink:806564809386623097> Website: https://bonk.ml/`
+        helplist += `\n<:logo:791084884398702632> Thread: https://hypixel.net/threads/hypelink-hypixel-and-discord-verification-bot.3843125/\n<:hypelink:806564809386623097> Website: https://bonk.ml/`
 
         const embed = new Discord.MessageEmbed()
             .setDescription(helplist)
