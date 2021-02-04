@@ -35,9 +35,6 @@ client.once('ready', () => {
     if (!db.get('unverified')) db.set('unverified', 0);
 
     db.set('startup', new Date().getTime());
-
-    consola.info(`Total Verified: ${db.get('verified').toLocaleString()}`);
-    consola.info(`Total Unverified: ${db.get('unverified').toLocaleString()}`);
 })
 
 client.on('guildCreate', (guild) => {
