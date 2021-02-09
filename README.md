@@ -1,7 +1,7 @@
 # HypeLink
 Hypixel and Discord verification bot. (basically HyVerify 2)
 ---
-i started working on bots again and decided to remake hyverify 😳
+I started working on bots again and decided to remake HyVerify since it was a mess 😳
 
 ### Invite the bot to your own server by [clicking here](https://bonk.ml/invite)
 
@@ -21,7 +21,8 @@ i started working on bots again and decided to remake hyverify 😳
   
   "invite_link": "the full bot invite link (e.g. https://discord.com/api/oauth2/authorize?client_id=478330652119400451&permissions=8&scope=bot)",
   "default_prefix": "!",
-  "name": "HypeLink"
+  "name": "HypeLink",
+  "owner": "your discord id"
 }
 ```
 - Use `node app.js` to start the bot
