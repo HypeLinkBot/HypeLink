@@ -55,24 +55,34 @@ module.exports = {
             ids[i] = serverroles[ids[i]];
         }
 
+        let encerr = false;
         await message.member.roles.cache.forEach((userrole) => {
             if (ids.indexOf(userrole.id) !== -1) {
-                message.member.roles.remove(userrole.id);
+                message.member.roles.remove(userrole.id).catch(() => {
+                    encerr = true;
+                    let errembed = new Discord.MessageEmbed()
+                        .setColor(e.red)
+                        .setDescription(`${e.x} **Couldn't remove roles from you!**\n\n${e.bunk} Make sure the bot's role is higher\n${e.bunk} than the ones it's trying to remove`)
+                    return newmsg.edit(errembed).catch();
+                });
             }
         })
 
-        newmsg.edit(new Discord.MessageEmbed()
-            .setColor(e.green)
-            .setDescription(e.check + ` You were successfully unverified!`)).then(() => {
+        setTimeout(() => {
+            if (encerr) return;
+            newmsg.edit(new Discord.MessageEmbed()
+                .setColor(e.green)
+                .setDescription(e.check + ` You were successfully unverified!`)).then(() => {
 
-            db.set('unverified', db.get('unverified') + 1);
+                db.set('unverified', db.get('unverified') + 1);
 
-            if (db.get(`${message.guild.id}.dm_unverify`) == true) {
-                message.author.send(
-                    new Discord.MessageEmbed()
-                    .setColor(e.green)
-                    .setDescription(e.check + ` You were successfully unverified in **${message.guild.name}**`)).catch()
-            }
-        });
+                if (db.get(`${message.guild.id}.dm_unverify`) == true) {
+                    message.author.send(
+                        new Discord.MessageEmbed()
+                        .setColor(e.green)
+                        .setDescription(e.check + ` You were successfully unverified in **${message.guild.name}**`)).catch()
+                }
+            });
+        }, 600)
     },
 };

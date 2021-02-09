@@ -17,7 +17,7 @@ module.exports = {
         if (whitelist !== null && whitelist !== undefined && message.channel.id !== whitelist) {
             let dm = `${e.x} You can't verify in that channel.`;
 
-            if (message.member.hasPermission('administrator')) {
+            if (message.member.hasPermission('ADMINISTRATOR')) {
                 dm += `\n${e.bunk} *(because you have administrator, you can change*\n` +
                     `${e.bunk} *this by using \`${prefix}whitelist\` in that channel.*`
             }
@@ -48,7 +48,9 @@ module.exports = {
         if (message.member.roles.cache.has(roleid)) {
             const embed = new Discord.MessageEmbed()
                 .setColor(e.red)
-                .setDescription(`${e.x} You\'re already verified\n${e.tab} Use \`${prefix}unverify\` to unverify yourself.`);
+                .setDescription(`${e.x} You\'re already verified`);
+
+            // \n${e.tab} Use \`${prefix}unverify\` to unverify yourself.
 
             return message.channel.send(embed);
         }
@@ -132,7 +134,8 @@ module.exports = {
                     });
                 }
 
-                if (db.get(`${message.guild.id}.allow_unverify`) == null || db.get(`${message.guild.id}.allow_unverify`) == undefined || db.get(`${message.guild.id}.allow_unverify`) == true) {
+                let allowUnv = db.get(`${message.guild.id}.allow_unverify`);
+                if (allowUnv == null || allowUnv == true) {
                     desc += `${e.bunk} To unverify, use the command \`${prefix}unverify\``;
                 }
 
@@ -145,6 +148,17 @@ module.exports = {
                 newmsg.edit(successembed).then(() => {
                     db.set('verified', db.get('verified') + 1);
                 });
+
+                let removev = db.get(`${message.guild.id}.remove_verify`);
+                if (removev !== null && removev !== false) {
+                    if (message.member.roles.cache.get(removev) !== null) {
+                        message.member.roles.remove(removev).catch(() => {
+                            message.channel.send(new Discord.MessageEmbed()
+                                .setColor(e.red)
+                                .setDescription(`${e.x} Unable to remove the role <@!${removev}> role.`)).catch()
+                        });
+                    }
+                }
 
                 if (db.get(`${message.guild.id}.dm_verify`) == true) {
                     message.author.send(

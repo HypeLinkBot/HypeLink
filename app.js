@@ -25,17 +25,27 @@ function updateStatus() {
 }
 
 client.once('ready', () => {
-    consola.success(`Logged in as ${client.user.tag}`);
-    //client.user.setPresence('www.bonk.ml');
+    let wlcstr = `Logged in as ${client.user.tag}`;
+    if (client.shard) wlcstr += ` in shard ${client.shard.ids}`;
+
+    consola.success(wlcstr);
+
     updateStatus();
     setInterval(updateStatus, 10000);
-
 
     if (!db.get('verified')) db.set('verified', 0);
     if (!db.get('unverified')) db.set('unverified', 0);
 
     db.set('startup', new Date().getTime());
 })
+
+client.on("error", (e) => {
+    consola.error(e)
+});
+
+client.on("warn", (e) => {
+    consola.warn(e)
+});
 
 client.on('guildCreate', (guild) => {
     consola.info(`😳 Added to ${guild.name} (${guild.id})`);
