@@ -2,6 +2,7 @@ const db = require('quick.db');
 const consola = require('consola');
 const Discord = require('discord.js');
 const e = require('../embeds.json');
+const ee = require('../embeds.json');
 const get = require('../lib/getStats');
 
 module.exports = {
@@ -24,7 +25,7 @@ module.exports = {
 
             message.author.send(
                 new Discord.MessageEmbed()
-                .setColor(e.red)
+                .setColor(ee.red)
                 .setDescription(dm)
             ).catch();
 
@@ -39,7 +40,7 @@ module.exports = {
             }
 
             const embed = new Discord.MessageEmbed()
-                .setColor(e.red)
+                .setColor(ee.red)
                 .setDescription(msg);
 
             return message.channel.send(embed);
@@ -47,7 +48,7 @@ module.exports = {
 
         if (message.member.roles.cache.has(roleid)) {
             const embed = new Discord.MessageEmbed()
-                .setColor(e.red)
+                .setColor(ee.red)
                 .setDescription(`${e.x} You\'re already verified`);
 
             // \n${e.tab} Use \`${prefix}unverify\` to unverify yourself.
@@ -81,20 +82,18 @@ module.exports = {
 
             if (body.error) {
                 const embed = new Discord.MessageEmbed()
-                    .setColor(e.red)
+                    .setColor(ee.red)
                     .setDescription(`${e.x} **${body.errorMsg}**\n${e.bunk} Double check your username and try again in a few minutes.`);
 
                 return newmsg.edit(embed);
             }
 
             if (message.author.tag !== body.discord) {
+
                 const embed = new Discord.MessageEmbed()
-                    .setColor(e.red)
-                    .setDescription(
-                        `${e.x} \`${body.name}\`'s set Discord (\`${(!body.discord) ? 'None#0000' : body.discord}\`) doesn't match your tag (\`${message.author.tag}\`)\n` +
-                        `${e.tab} If you just updated it, wait a minute and try again.\n\n`
-                        `${e.tab} For linking instructions, do \`${prefix}verify\``
-                    )
+                    .setColor(ee.red)
+                    .setDescription(`${e.x} \`${body.name}\`'s set Discord (\`${(!body.discord) ? 'None#0000' : body.discord}\`) doesn't match your tag (\`${message.author.tag}\`)\n${e.bunk} If you just updated it, wait a minute and try again.\n\n${e.bunk} For linking instructions, do \`${prefix}verify\``)
+
                 return newmsg.edit(embed);
             }
 
@@ -102,8 +101,8 @@ module.exports = {
             if (role !== undefined && role !== null) {
                 await message.member.roles.add(role).catch(() => {
                     const embed = new Discord.MessageEmbed()
-                        .setColor(e.red)
-                        .setDescription(`${e.x} **Couldn't give you the Verified role**\n${e.bunk} Make sure the role isn't higher than me :flushed:`);
+                        .setColor(ee.red)
+                        .setDescription(`${e.x} **Couldn't give you the Verified role**\n${ee.bunk} Make sure the role isn't higher than me :flushed:`);
 
                     success = false;
                     return newmsg.edit(embed);
@@ -115,7 +114,7 @@ module.exports = {
                         if (roleid !== null && roleid !== undefined) {
                             await message.member.roles.add(roleid).catch(() => {
                                 const embed = new Discord.MessageEmbed()
-                                    .setColor(e.red)
+                                    .setColor(ee.red)
                                     .setDescription(`${e.x} **Couldn't give you the ${body.rank.replace(/_PLUS/g, '+')} role**\n${e.bunk} Make sure the role isn't higher than me :flushed:`);
 
                                 success = false;
@@ -130,7 +129,7 @@ module.exports = {
                 let desc = `${e.check} **You're all set**!\n${e.bunk} Successfully verified as \`${body.name}\`.\n\n`;
 
                 if (db.get(`${message.guild.id}.change_nick`) == true || db.get(`${message.guild.id}.change_nick`) == null) {
-                    message.member.setNickname(body.name).catch((e) => {
+                    message.member.setNickname(body.name).catch(() => {
                         //desc += `*(because your role is above the bot,*\n${e.bunk} *your nickname couldn't be changed)*`;
                     });
                 }
@@ -141,7 +140,7 @@ module.exports = {
                 }
 
                 let successembed = new Discord.MessageEmbed()
-                    .setColor(e.green)
+                    .setColor(ee.green)
                     .setThumbnail("https://crafatar.com/avatars/" + body.uuid)
                     .setDescription(desc);
 
@@ -155,7 +154,7 @@ module.exports = {
                     if (message.member.roles.cache.get(removev) !== null) {
                         message.member.roles.remove(removev).catch(() => {
                             message.channel.send(new Discord.MessageEmbed()
-                                .setColor(e.red)
+                                .setColor(ee.red)
                                 .setDescription(`${e.x} Unable to remove the role <@!${removev}> role.`)).catch()
                         });
                     }
@@ -164,7 +163,7 @@ module.exports = {
                 if (db.get(`${message.guild.id}.dm_verify`) == true) {
                     message.author.send(
                         new Discord.MessageEmbed()
-                        .setColor(e.green)
+                        .setColor(ee.green)
                         .setDescription(`${e.check} You were successfully verified as **${body.name}** in **${message.guild.name}**`)).catch()
                 }
             } else {
@@ -174,7 +173,7 @@ module.exports = {
                 }
 
                 let errembed = new Discord.MessageEmbed()
-                    .setColor(e.red)
+                    .setColor(ee.red)
                     .setDescription(msg)
                 newmsg.edit(errembed);
             }
