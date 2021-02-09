@@ -92,6 +92,7 @@ module.exports = {
                     .setColor(e.red)
                     .setDescription(
                         `${e.x} \`${body.name}\`'s set Discord (\`${(!body.discord) ? 'None#0000' : body.discord}\`) doesn't match your tag (\`${message.author.tag}\`)\n` +
+                        `${e.tab} If you just updated it, wait a minute and try again.\n\n`
                         `${e.tab} For linking instructions, do \`${prefix}verify\``
                     )
                 return newmsg.edit(embed);

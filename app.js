@@ -17,10 +17,28 @@ for (const file of commandFiles) {
     client.commands.set(command.name, command);
 }
 
+if (!db.get('verified')) db.set('verified', 0);
+if (!db.get('unverified')) db.set('unverified', 0);
+
+db.set('startup', new Date().getTime());
+
+let currStatus = 0;
+
 function updateStatus() {
+    let statusList = [
+        client.guilds.cache.size + " servers 😳",
+        db.get('verified') + " verified ✅"
+    ]
+    setStatus(statusList[currStatus]);
+    currStatus++;
+
+    if (currStatus >= statusList.length) currStatus = 0;
+}
+
+function setStatus(text, type = "PLAYING") {
     client.user.setActivity({
-        name: "https://bonk.ml | " + client.guilds.cache.size + " servers 😳",
-        type: "PLAYING"
+        name: "https://bonk.ml - " + text + " - !help",
+        type
     })
 }
 
@@ -31,12 +49,7 @@ client.once('ready', () => {
     consola.success(wlcstr);
 
     updateStatus();
-    setInterval(updateStatus, 10000);
-
-    if (!db.get('verified')) db.set('verified', 0);
-    if (!db.get('unverified')) db.set('unverified', 0);
-
-    db.set('startup', new Date().getTime());
+    setInterval(updateStatus, 5000);
 })
 
 client.on("error", (e) => {
