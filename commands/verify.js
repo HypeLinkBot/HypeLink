@@ -10,6 +10,7 @@ module.exports = {
     description: 'Verify with Hypixel',
     cat: 'settings',
     alias: ['v'],
+    guild: true,
     async execute(message, args, client, prefix) {
         let roleid = db.get(`${message.guild.id}.roles.verified`);
         let role = message.guild.roles.cache.get(roleid);
@@ -92,7 +93,7 @@ module.exports = {
 
                 const embed = new Discord.MessageEmbed()
                     .setColor(ee.red)
-                    .setDescription(`${e.x} \`${body.name}\`'s set Discord (\`${(!body.discord) ? 'None#0000' : body.discord}\`) doesn't match your tag (\`${message.author.tag}\`)\n${e.bunk} If you just updated it, wait a minute and try again.\n\n${e.bunk} For linking instructions, do \`${prefix}verify\``)
+                    .setDescription(`${e.x} \`${body.name}\`'s set Discord (\`${(!body.discord) ? 'None#0000' : body.discord}\`) doesn't match\n${e.bunk} your tag (\`${message.author.tag}\`)\n${e.bunk} If you just updated it, wait a minute and try again.\n\n${e.bunk} For linking instructions, do \`${prefix}verify\``)
 
                 return newmsg.edit(embed);
             }
@@ -126,7 +127,22 @@ module.exports = {
 
                 if (!success) return;
 
-                let desc = `${e.check} **You're all set**!\n${e.bunk} Successfully verified as \`${body.name}\`.\n\n`;
+                let desc = `${e.check} **You're all set**!\n${e.bunk} Successfully verified as\n${e.bunk} \`${body.name}\`.\n\n`;
+
+                switch (body.name.toLowerCase()) {
+                    case 'xdabdoub':
+                        desc += `${e.bunk} hi dab :3\n\n`
+                        break;
+                    case 'foobball':
+                        desc += `${e.bunk} :flushed: :flushed: :flushed:\n\n`
+                        break;
+                    case 'carbonate':
+                        desc += `${e.bunk} hi carbs :3\n\n`
+                        break;
+                    case 'bowspleefed':
+                        desc += `${e.bunk} hi trick :3\n\n`
+                        break;
+                }
 
                 if (db.get(`${message.guild.id}.change_nick`) == true || db.get(`${message.guild.id}.change_nick`) == null) {
                     message.member.setNickname(body.name).catch(() => {
@@ -150,9 +166,12 @@ module.exports = {
                 });
 
                 let removev = db.get(`${message.guild.id}.remove_verify`);
-                if (removev !== null && removev !== false) {
+                if (removev !== null && removev !== false && removev !== undefined) {
                     if (message.member.roles.cache.get(removev) !== null) {
-                        message.member.roles.remove(removev).catch(() => {
+                        consola.info(`Removing a role from ${message.author.tag}...`);
+                        message.member.roles.remove(removev).then(() => {
+                            consola.success(`Role removed from ${message.author.tag}!`);
+                        }).catch(() => {
                             message.channel.send(new Discord.MessageEmbed()
                                 .setColor(ee.red)
                                 .setDescription(`${e.x} Unable to remove the role <@!${removev}> role.`)).catch()

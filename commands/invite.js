@@ -7,6 +7,7 @@ module.exports = {
     name: 'invite',
     description: 'DMs you the bot\'s invite link',
     cat: 'other',
+    guild: false,
     alias: ['inv', 'i'],
     execute(message, args, client, prefix) {
         const invite = new Discord.MessageEmbed()
@@ -14,18 +15,22 @@ module.exports = {
             .setDescription(
                 `:pleading_face: **How to Invite**\n` +
                 `${e.bunk} [Click here](${invite_link}) or visit https://bonk.ml/invite\n\n` +
-                `${e.bunk} **Bot Owner:** \`${owner(client).tag}\`\n` +
-                `${e.bunk} *if this tag is invalid, run this command again*`
+                `${e.bunk} **Bot Owner:** \`${owner(client).tag}\``
             )
-        message.author.send(invite).then(() => {
-            message.react('👌');
-        }).catch(() => {
-            const embed = new Discord.MessageEmbed()
-                .setColor(e.red)
-                .setDescription(`${e.x} **Please enable DMs from server members.**`);
-            message.channel.send(embed).then((newmsg) => {
-                newmsg.delete({ timeout: 4000 });
+
+        if (message.guild) {
+            message.author.send(invite).then(() => {
+                message.react('👌');
+            }).catch(() => {
+                const embed = new Discord.MessageEmbed()
+                    .setColor(e.red)
+                    .setDescription(`${e.x} **Please enable DMs from server members.**`);
+                message.channel.send(embed).then((newmsg) => {
+                    newmsg.delete({ timeout: 4000 });
+                });
             });
-        });
+        } else {
+            message.author.send(invite).catch();
+        }
     },
 };

@@ -44,6 +44,7 @@ module.exports = {
     alias: ['set', 's'],
     description: 'View and change the bot\'s settings',
     cat: 'config',
+    guild: true,
     async execute(message, args, client, prefix) {
         let setChangenick = db.get(`${message.guild.id}.change_nick`);
         let giveRankRole = db.get(`${message.guild.id}.rank_role`);

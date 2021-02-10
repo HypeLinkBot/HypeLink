@@ -9,6 +9,7 @@ module.exports = {
     description: 'Unverify yourself',
     cat: 'settings',
     alias: ['unv'],
+    guild: true,
     async execute(message, args, client, prefix) {
         let roleid = db.get(`${message.guild.id}.roles.verified`);
         let role = message.guild.roles.cache.get(roleid);

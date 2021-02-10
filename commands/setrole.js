@@ -9,6 +9,7 @@ module.exports = {
     description: 'Assign a rank or "verified" to a role',
     alias: ['setroles', 'sr', 'srs'],
     cat: 'settings',
+    guild: true,
     async execute(message, args, client, prefix) {
         if (!message.member.hasPermission('MANAGE_ROLES')) {
             const embed = new Discord.MessageEmbed()

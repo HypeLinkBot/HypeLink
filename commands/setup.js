@@ -11,6 +11,7 @@ module.exports = {
     description: 'Creates rank roles and verified role',
     alias: [],
     cat: 'settings',
+    guild: true,
     async execute(message, args, client, prefix) {
         if (!message.member.hasPermission('ADMINISTRATOR')) {
             const embed = new Discord.MessageEmbed()

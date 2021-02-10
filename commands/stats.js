@@ -13,6 +13,7 @@ module.exports = {
     description: 'Total stats for the bot',
     cat: 'other',
     alias: ['st'],
+    guild: false,
     execute(message, args, client, prefix) {
         let dateNow = new Date();
         let dateStart = new Date(db.get('startup'));
@@ -30,7 +31,7 @@ module.exports = {
         else datestring = `${seconds} second${(seconds == 1) ? '' : 's'}`;
         datestring += ' ago';
 
-        const invite = new Discord.MessageEmbed()
+        const statslist = new Discord.MessageEmbed()
             .setColor('YELLOW')
             .setDescription(
                 `:flushed: **Bot Stats**\n` +
@@ -41,15 +42,21 @@ module.exports = {
                 `${e.bunk} **Bot Owner:** \`${owner(client).tag}\`\n` +
                 `${e.bunk} *if this tag is invalid, run this command again*`
             )
-        message.author.send(invite).then(() => {
-            message.react('👌');
-        }).catch(() => {
-            const embed = new Discord.MessageEmbed()
-                .setColor(e.red)
-                .setDescription(`${e.x} **Please enable DMs from server members.**`);
-            message.channel.send(embed).then((newmsg) => {
-                newmsg.delete({ timeout: 4000 });
+
+
+        if (message.guild) {
+            message.author.send(statslist).then(() => {
+                message.react('👌');
+            }).catch(() => {
+                const embed = new Discord.MessageEmbed()
+                    .setColor(e.red)
+                    .setDescription(`${e.x} **Please enable DMs from server members.**`);
+                message.channel.send(embed).then((newmsg) => {
+                    newmsg.delete({ timeout: 4000 });
+                });
             });
-        });
+        } else {
+            message.author.send(statslist).catch();
+        }
     },
 };

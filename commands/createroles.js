@@ -8,6 +8,7 @@ module.exports = {
     name: 'createroles',
     description: 'Creates default rank roles',
     cat: 'settings',
+    guild: true,
     alias: ['roles', 'role'],
     async execute(message, args, client, prefix) {
         if (!message.member.hasPermission('MANAGE_ROLES')) {

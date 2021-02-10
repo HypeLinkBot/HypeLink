@@ -8,6 +8,7 @@ module.exports = {
     description: 'View and change the bot\'s prefix',
     cat: 'settings',
     alias: ['pre'],
+    guild: true,
     execute(message, args, client, prefix) {
         if (!message.member.hasPermission('MANAGE_GUILD')) {
             const embed = new Discord.MessageEmbed()

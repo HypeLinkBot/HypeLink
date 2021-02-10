@@ -11,6 +11,7 @@ module.exports = {
     description: 'Set verification channel',
     cat: 'settings',
     alias: ['wl'],
+    guild: true,
     async execute(message, args, client, prefix) {
         if (!message.member.hasPermission('administrator')) {
             const embed = new Discord.MessageEmbed()

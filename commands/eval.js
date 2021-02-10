@@ -1,4 +1,5 @@
 const db = require('quick.db');
+const owner = require('../lib/owner');
 const e = require('../embeds.json');
 
 const clean = text => {
@@ -10,11 +11,12 @@ const clean = text => {
 
 module.exports = {
     name: 'eval',
-    description: 'Eval for bot owner',
+    description: '😳😳😳',
     cat: 'other',
+    guild: false,
     alias: [],
     execute(message, args, client, prefix) {
-        if (message.author.id !== '219541416760705024') return;
+        if (message.author.id !== owner(client).id) return message.channel.send(':flushed:').then((newmsg) => { newmsg.delete({ timeout: 4000 }).catch() }).catch();
         try {
             const code = args.join(" ");
             let evaled = eval(code);

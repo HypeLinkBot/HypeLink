@@ -26,8 +26,10 @@ let currStatus = 0;
 
 function updateStatus() {
     let statusList = [
-        client.guilds.cache.size + " servers 😳",
-        db.get('verified') + " verified ✅"
+        client.guilds.cache.size.toLocaleString() + " servers 😳",
+        db.get('verified') + " verified ✅",
+        client.users.cache.size.toLocaleString() + " users 🤼",
+        'stick 🤮🤮'
     ]
     setStatus(statusList[currStatus]);
     currStatus++;
@@ -37,7 +39,7 @@ function updateStatus() {
 
 function setStatus(text, type = "PLAYING") {
     client.user.setActivity({
-        name: "https://bonk.ml - " + text + " - !help",
+        name: "www.bonk.ml | " + text,
         type
     })
 }
@@ -70,9 +72,10 @@ client.on('guildDelete', (guild) => {
 
 client.on('message', async message => {
     if (message.author.bot) return;
-    if (!message.guild) return;
 
-    const customprefix = db.get(`${message.guild.id}.prefix`);
+    let customprefix = '!';
+
+    if (message.guild) customprefix = db.get(`${message.guild.id}.prefix`);
     const prefix = customprefix || config.default_prefix;
 
     let args;
@@ -89,7 +92,8 @@ client.on('message', async message => {
     if (command == 'help') {
         let helplist = ``;
         client.commands.forEach((cmd) => {
-            helplist += `\`${prefix}${cmd.name}\` - ${cmd.description}\n`;
+            if (cmd.name !== 'eval')
+                helplist += `\`${prefix}${cmd.name}\` - ${cmd.description}\n`;
         })
 
         helplist += `\n<:logo:791084884398702632> Thread: https://hypixel.net/threads/hypelink-hypixel-and-discord-verification-bot.3843125/\n<:hypelink:806564809386623097> Website: https://bonk.ml/`
@@ -126,6 +130,11 @@ client.on('message', async message => {
     }
 
     try {
+        let guildonly = client.commands.get(command).guild;
+        if (guildonly && !message.guild) {
+            return message.channel.send(`${e.x} This command can only be ran in guilds.`).catch();
+        }
+
         client.commands.get(command).execute(message, args, client, prefix);
     } catch (error) {
         consola.error(error);

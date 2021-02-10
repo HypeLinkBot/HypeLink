@@ -6,6 +6,7 @@ module.exports = {
     name: 'report',
     description: 'Report a problem with the bot',
     cat: 'other',
+    guild: false,
     alias: ['rep', 'problem'],
     execute(message, args, client, prefix) {
         const reportchannel = client.channels.cache.get(report_channel);
@@ -15,7 +16,7 @@ module.exports = {
                 .setColor(e.red)
                 .setDescription(`${e.x} **Your report must be at least 10 characters.**\n${e.bunk} Example: \`${prefix}report Can't verify\``);
             message.channel.send(embed).then((newmsg) => {
-                newmsg.delete({ timeout: 10000 }).catch();
+                if (message.guild) newmsg.delete({ timeout: 10000 }).catch();
             });
         } else {
             reportchannel.send(`${message.author.tag} | ${message.author.id}\n${args.join(' ').substr(0, 1000)}`).then(() => {
@@ -23,14 +24,14 @@ module.exports = {
                     .setColor(e.green)
                     .setDescription(`${e.check} **Report submitted successfully!**`);
                 message.channel.send(embed).then((newmsg) => {
-                    newmsg.delete({ timeout: 10000 }).catch();
+                    if (message.guild) newmsg.delete({ timeout: 10000 }).catch();
                 });
             }).catch(() => {
                 const embed = new Discord.MessageEmbed()
                     .setColor(e.red)
-                    .setDescription(`${e.x} **Your report couldn't be submitted**\n${e.bunk} uhhh this should never happen`);
+                    .setDescription(`${e.x} **Your report couldn't be submitted**\n${e.bunk} uhhh this should never happen, please dm foob`);
                 message.channel.send(embed).then((newmsg) => {
-                    newmsg.delete({ timeout: 10000 }).catch();
+                    if (message.guild) newmsg.delete({ timeout: 10000 }).catch();
                 });
             })
         }
