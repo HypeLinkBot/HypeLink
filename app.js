@@ -28,8 +28,7 @@ function updateStatus() {
     let statusList = [
         client.guilds.cache.size.toLocaleString() + " servers 😳",
         db.get('verified') + " verified ✅",
-        client.users.cache.size.toLocaleString() + " users 🤼",
-        'stick 🤮🤮'
+        client.users.cache.size.toLocaleString() + " users 🤼"
     ]
     setStatus(statusList[currStatus]);
     currStatus++;

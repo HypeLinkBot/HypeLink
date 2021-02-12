@@ -57,7 +57,7 @@ module.exports = {
             return message.channel.send(embed);
         }
 
-        if (args.length !== 1) {
+        if (args.join('').length < 2) {
             let text = `**${e.check} Verification Instructions**:\n` +
                 ` • Log on to Hypixel\n` +
                 ` • Right-click your head in the main lobby\n` +
@@ -76,7 +76,7 @@ module.exports = {
                 `${e.tab} Contacting ${e.logo}Hypixel\'s API...`
             ));
 
-        let username = args[0];
+        let username = args.join('');
 
         get.form(username, async(body) => {
             //console.log(body);
@@ -93,7 +93,7 @@ module.exports = {
 
                 const embed = new Discord.MessageEmbed()
                     .setColor(ee.red)
-                    .setDescription(`${e.x} \`${body.name}\`'s set Discord (\`${(!body.discord) ? 'None#0000' : body.discord}\`) doesn't match\n${e.bunk} your tag (\`${message.author.tag}\`)\n${e.bunk} If you just updated it, wait a minute and try again.\n\n${e.bunk} For linking instructions, do \`${prefix}verify\``)
+                    .setDescription(`${e.x} \`${body.name}\`'s set Discord (\`${(!body.discord) ? 'None#0000' : body.discord}\`)\ndoesn't match your tag (\`${message.author.tag}\`)\nIf you just updated it, wait a minute and try again.\n\nFor linking instructions, do \`${prefix}verify\``)
 
                 return newmsg.edit(embed);
             }
@@ -157,7 +157,7 @@ module.exports = {
 
                 let successembed = new Discord.MessageEmbed()
                     .setColor(ee.green)
-                    .setThumbnail("https://crafatar.com/avatars/" + body.uuid)
+                    .setThumbnail("https://crafatar.com/avatars/" + body.uuid + ".png")
                     .setDescription(desc);
 
                 if (!success) return;
