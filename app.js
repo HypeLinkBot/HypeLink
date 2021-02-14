@@ -103,7 +103,7 @@ client.on('message', async message => {
             .setThumbnail('https://hotemoji.com/images/dl/7/rolled-up-newspaper-emoji-by-twitter.png')
 
         message.author.send(embed).then(() => {
-            message.react('✅');
+            if (message.guild) message.react('✅');
         }).catch(() => {
             const embed = new Discord.MessageEmbed()
                 .setColor(e.red)
@@ -141,7 +141,7 @@ client.on('message', async message => {
         message.channel.send(
             new Discord.MessageEmbed()
             .setColor(e.red)
-            .setDescription(`${e.x} There was an error trying to execute that command.\n${e.bunk} If this keeps happening, please report it to \`${owner(client).tag}\` :pleading_face:`)
+            .setDescription(`${e.x} There was an error trying to execute that command.\n${e.bunk} DM \`${owner(client).tag}\` can she can help you :pleading_face:`)
         );
     }
 });

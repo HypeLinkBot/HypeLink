@@ -40,80 +40,84 @@ const dict = {
 }
 
 module.exports = {
-    name: 'settings',
-    alias: ['set', 's'],
-    description: 'View and change the bot\'s settings',
-    cat: 'config',
-    guild: true,
-    async execute(message, args, client, prefix) {
-        let setChangenick = db.get(`${message.guild.id}.change_nick`);
-        let giveRankRole = db.get(`${message.guild.id}.rank_role`);
-        let dmVerify = db.get(`${message.guild.id}.dm_verify`);
-        let dmUnverify = db.get(`${message.guild.id}.dm_unverify`);
-        let allowUnverify = db.get(`${message.guild.id}.allow_unverify`);
-        let removeUnverify = db.get(`${message.guild.id}.remove_verify`);
+        name: 'settings',
+        alias: ['set', 's'],
+        description: 'View and change the bot\'s settings',
+        cat: 'config',
+        guild: true,
+        async execute(message, args, client, prefix) {
+            let setChangenick = db.get(`${message.guild.id}.change_nick`);
+            let giveRankRole = db.get(`${message.guild.id}.rank_role`);
+            let dmVerify = db.get(`${message.guild.id}.dm_verify`);
+            let dmUnverify = db.get(`${message.guild.id}.dm_unverify`);
+            let allowUnverify = db.get(`${message.guild.id}.allow_unverify`);
+            let removeUnverify = db.get(`${message.guild.id}.remove_verify`);
 
-        let currentval = {
-            'changenick': setChangenick,
-            'rankrole': giveRankRole
-        }
+            let currentval = {
+                'changenick': setChangenick,
+                'rankrole': giveRankRole,
+                'dmverify': dmVerify,
+                'dmunverify': dmUnverify,
+                'allowunverify': allowUnverify,
+                'removeroleonverify': (removeUnverify == false || removeUnverify == null) ? false : true
+            }
 
-        if (!message.member.hasPermission('MANAGE_ROLES')) {
-            const embed = new Discord.MessageEmbed()
-                .setColor(e.red)
-                .setDescription(
-                    `${e.x} **You don't have permission to use this command**\n` +
-                    `${e.bunk} You need the **Manage Roles** permission to use this command.`
-                )
-
-            return message.channel.send(embed);
-        }
-
-        if (args.length == 0) {
-            const embed = new Discord.MessageEmbed()
-                .setColor(e.green)
-                .setDescription(
-                    `**⚙️ Server Settings:**\n` +
-                    `${e.bunk} ${(setChangenick == true || setChangenick == null) ? e.check : e.x} ChangeNick ➖ Change nickname to IGN when verified\n` +
-                    `${e.bunk} ${(dmVerify == true) ? e.check : e.x} DMVerify ➖ DM a user when they're successfully verified\n` +
-                    `${e.bunk} ${(dmUnverify == true) ? e.check : e.x} DMUnverify ➖ DM a user when they're successfully unverified\n` +
-                    `${e.bunk} ${(allowUnverify == true || allowUnverify == null) ? e.check : e.x} AllowUnverify ➖ Let a user unverify themselves\n` +
-                    `${e.bunk} ${(giveRankRole || giveRankRole == null) ? e.check : e.x} RankRole ➖ Give hypixel rank as a role when user is verified\n\n` +
-                    `${e.bunk} ${(removeUnverify == false || removeUnverify == null) ? e.x : e.check} RemoveRoleOnVerify ➖ Remove a role when a user is verified\n\n` +
-                    `**Bot Prefix**: \`${prefix}\`\n` +
-                    `${e.bunk} (configure using \`${prefix}prefix\`)\n\n` +
-                    `*To change a setting:*\n` +
-                    `${e.bunk} \`${prefix}set [setting name] [true/false/on/off]\`\n` +
-                    `${e.bunk} \`${prefix}set ChangeNick false\`\n\n` +
-                    `${e.bunk} \`${prefix}set RemoveRoleOnVerify [@rolemention/roleid]\`\n` +
-                    `${e.bunk} \`${prefix}set RemoveRoleOnVerify [false/off]\``
-                )
-
-            message.channel.send(embed);
-        } else if (args.length == 1) {
-            let val = args[0].toLowerCase();
-
-            if (dict[val] == undefined) {
-                const embed = new Discord.MessageEmbed()
-                    .setColor(e.red)
-                    .setDescription(`${e.x} **Couldn't find that setting**\n${e.bunk} *Use \`${prefix}settings\` for a full list of values*`)
-                message.channel.send(embed);
-            } else {
+            if (!message.member.hasPermission('MANAGE_ROLES')) {
                 const embed = new Discord.MessageEmbed()
                     .setColor(e.red)
                     .setDescription(
-                        `⚙️ **Setting**: ${dict[val].short}\n` +
-                        `${e.bunk} **Description**: ${dict[val].desc}\n` +
-                        `${e.bunk} **Value**: ${(currentval[val] || currentval[val] == null) ? e.check + ' On' : e.x + ' Off'}\n` +
-                        `\n*${e.bunk} To change this value, run \`${prefix}settings ${val} [true/false]\`*\n` +
-                        `${e.bunk} *Use \`${prefix}settings\` for a full list of values*`
+                        `${e.x} **You don't have permission to use this command**\n` +
+                        `${e.bunk} You need the **Manage Roles** permission to use this command.`
                     )
 
-                if (dict[val].short == 'RemoveRoleOnVerify') {
-                    embed.setDescription(
-                        `⚙️ **Setting**: ${dict[val].short}\n` +
-                        `${e.bunk} **Description**: ${dict[val].desc}\n` +
-                        `${e.bunk} **Value**: ${(currentval[val] == null || currentval[val] == false) ? e.check + ' On' : e.x + ' Off'}\n` +
+                return message.channel.send(embed);
+            }
+
+            if (args.length == 0) {
+                const embed = new Discord.MessageEmbed()
+                    .setColor(e.green)
+                    .setDescription(
+                        `**⚙️ Server Settings:**\n` +
+                        `${e.bunk} ${(setChangenick == true || setChangenick == null) ? e.check : e.x} ChangeNick ➖ Change nickname to IGN when verified\n` +
+                        `${e.bunk} ${(dmVerify == true) ? e.check : e.x} DMVerify ➖ DM a user when they're successfully verified\n` +
+                        `${e.bunk} ${(dmUnverify == true) ? e.check : e.x} DMUnverify ➖ DM a user when they're successfully unverified\n` +
+                        `${e.bunk} ${(allowUnverify == true || allowUnverify == null) ? e.check : e.x} AllowUnverify ➖ Let a user unverify themselves\n` +
+                        `${e.bunk} ${(giveRankRole || giveRankRole == null) ? e.check : e.x} RankRole ➖ Give hypixel rank as a role when user is verified\n\n` +
+                        `${e.bunk} ${(removeUnverify == false || removeUnverify == null) ? e.x : e.check} RemoveRoleOnVerify ➖ Remove a role when a user is verified\n\n` +
+                        `**Bot Prefix**: \`${prefix}\`\n` +
+                        `${e.bunk} (configure using \`${prefix}prefix\`)\n\n` +
+                        `*To change a setting:*\n` +
+                        `${e.bunk} \`${prefix}set [setting name] [true/false/on/off]\`\n` +
+                        `${e.bunk} \`${prefix}set ChangeNick false\`\n\n` +
+                        `${e.bunk} \`${prefix}set RemoveRoleOnVerify [@rolemention/roleid]\`\n` +
+                        `${e.bunk} \`${prefix}set RemoveRoleOnVerify [false/off]\``
+                    )
+
+                message.channel.send(embed);
+            } else if (args.length == 1) {
+                let val = args[0].toLowerCase();
+
+                if (dict[val] == undefined) {
+                    const embed = new Discord.MessageEmbed()
+                        .setColor(e.red)
+                        .setDescription(`${e.x} **Couldn't find that setting**\n${e.bunk} *Use \`${prefix}settings\` for a full list of values*`)
+                    message.channel.send(embed);
+                } else {
+                    const embed = new Discord.MessageEmbed()
+                        .setColor(e.red)
+                        .setDescription(
+                            `⚙️ **Setting**: ${dict[val].short}\n` +
+                            `${e.bunk} **Description**: ${dict[val].desc}\n` +
+                            `${e.bunk} **Value**: ${(currentval[val] || currentval[val] == null) ? e.check + ' On' : e.x + ' Off'}\n` +
+                            `\n*${e.bunk} To change this value, run \`${prefix}settings ${val} [true/false]\`*\n` +
+                            `${e.bunk} *Use \`${prefix}settings\` for a full list of values*`
+                        )
+
+                    if (dict[val].short == 'RemoveRoleOnVerify') {
+                        embed.setDescription(
+                                `⚙️ **Setting**: ${dict[val].short}\n` +
+                                `${e.bunk} **Description**: ${dict[val].desc}\n` +
+                                `${e.bunk} **Value**: ${(removeUnverify == null || removeUnverify == false) ? e.x + ' Off' : `<@&${removeUnverify}>`}\n` +
                         `\n${e.bunk} \`${prefix}set ${val} [@rolemention]\`\n` +
                         `${e.bunk} \`${prefix}set ${val} [off/false]\`\n\n` +
                         `${e.bunk} *Use \`${prefix}settings\` for a full list of values*`

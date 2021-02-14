@@ -93,7 +93,12 @@ module.exports = {
 
                 const embed = new Discord.MessageEmbed()
                     .setColor(ee.red)
-                    .setDescription(`${e.x} \`${body.name}\`'s set Discord (\`${(!body.discord) ? 'None#0000' : body.discord}\`)\ndoesn't match your tag (\`${message.author.tag}\`)\nIf you just updated it, wait a minute and try again.\n\nFor linking instructions, do \`${prefix}verify\``)
+                    .setDescription(
+                        `${e.x} **Error: Tag Mismatch**\n\`${body.name}\`'s set Discord (\`${(!body.discord) ? 'None#0000' : body.discord}\`)\n` +
+                        `doesn't match your tag (\`${message.author.tag}\`)\n\n` +
+                        `**If you just updated it, wait a minute and try again.**` +
+                        `\nFor linking instructions, do \`${prefix}verify\``
+                    )
 
                 return newmsg.edit(embed);
             }
@@ -127,22 +132,22 @@ module.exports = {
 
                 if (!success) return;
 
-                let desc = `${e.check} **You're all set**!\n${e.bunk} Successfully verified as\n${e.bunk} \`${body.name}\`.\n\n`;
+                let desc = `${e.check} **You're all set**!\n${e.bunk} <@!${message.author.id}> verified as\n${e.bunk} \`${body.name}\`\n\n`;
 
-                switch (body.name.toLowerCase()) {
-                    case 'xdabdoub':
-                        desc += `${e.bunk} hi dab :3\n\n`
-                        break;
-                    case 'foobball':
-                        desc += `${e.bunk} :flushed: :flushed: :flushed:\n\n`
-                        break;
-                    case 'carbonate':
-                        desc += `${e.bunk} hi carbs :3\n\n`
-                        break;
-                    case 'bowspleefed':
-                        desc += `${e.bunk} hi trick :3\n\n`
-                        break;
-                }
+                // switch (body.name.toLowerCase()) {
+                //     case 'xdabdoub':
+                //         desc += `${e.bunk} hi dab :3\n\n`
+                //         break;
+                //     case 'foobball':
+                //         desc += `${e.bunk} :flushed: :flushed: :flushed:\n\n`
+                //         break;
+                //     case 'carbonate':
+                //         desc += `${e.bunk} hi carbs :3\n\n`
+                //         break;
+                //     case 'bowspleefed':
+                //         desc += `${e.bunk} hi trick :3\n\n`
+                //         break;
+                // }
 
                 if (db.get(`${message.guild.id}.change_nick`) == true || db.get(`${message.guild.id}.change_nick`) == null) {
                     message.member.setNickname(body.name).catch(() => {
@@ -157,7 +162,7 @@ module.exports = {
 
                 let successembed = new Discord.MessageEmbed()
                     .setColor(ee.green)
-                    .setThumbnail("https://crafatar.com/avatars/" + body.uuid + ".png")
+                    .setThumbnail("https://crafatar.com/avatars/" + body.uuid)
                     .setDescription(desc);
 
                 if (!success) return;
@@ -168,9 +173,9 @@ module.exports = {
                 let removev = db.get(`${message.guild.id}.remove_verify`);
                 if (removev !== null && removev !== false && removev !== undefined) {
                     if (message.member.roles.cache.get(removev) !== null) {
-                        consola.info(`Removing a role from ${message.author.tag}...`);
+                        // consola.info(`Removing a role from ${message.author.tag}...`);
                         message.member.roles.remove(removev).then(() => {
-                            consola.success(`Role removed from ${message.author.tag}!`);
+                            // consola.success(`Role removed from ${message.author.tag}!`);
                         }).catch(() => {
                             message.channel.send(new Discord.MessageEmbed()
                                 .setColor(ee.red)
@@ -185,10 +190,12 @@ module.exports = {
                         .setColor(ee.green)
                         .setDescription(`${e.check} You were successfully verified as **${body.name}** in **${message.guild.name}**`)).catch()
                 }
+
+                consola.success(`${body.name} was verified in ${message.guild.name}`);
             } else {
                 let msg = `${e.x} Couldn\'t give you the verified role`
                 if (message.member.hasPermission('MANAGE_ROLES')) {
-                    msg += `\n${e.bunk} *please configure the server using ${prefix}setup*`
+                    msg += `\n${e.bunk} *please configure this server by using ${prefix}setup*`
                 }
 
                 let errembed = new Discord.MessageEmbed()

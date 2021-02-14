@@ -1,25 +1,25 @@
 const Discord = require('discord.js');
-const { invite_link } = require('../config.json');
 const e = require('../embeds.json');
 const owner = require('../lib/owner');
 
 module.exports = {
-    name: 'invite',
-    description: 'DMs you the bot\'s invite link',
+    name: 'donate',
+    description: 'If you want to support the bot :point_right::point_left:',
     cat: 'other',
     guild: false,
-    alias: ['inv', 'i'],
+    alias: ['donation', 'don', 'd'],
     execute(message, args, client, prefix) {
         const invite = new Discord.MessageEmbed()
             .setColor('YELLOW')
             .setDescription(
-                `:pleading_face: **How to Invite**\n` +
-                `${e.bunk} [Click here](${invite_link}) or visit https://bonk.ml/invite\n\n`
+                `:flushed: **Donation link**\n` +
+                `${e.bunk} [paypal.me/foobball](https://paypal.me/foobball)\n\n` +
+                `${e.bunk} thank you so much :heart::pleading_face:`
             ).setFooter(`Bot by ${owner(client).tag} | https://bonk.ml/`, owner(client).avatarURL())
 
         if (message.guild) {
             message.author.send(invite).then(() => {
-                message.react('👌');
+                message.react('💖');
             }).catch(() => {
                 const embed = new Discord.MessageEmbed()
                     .setColor(e.red)
