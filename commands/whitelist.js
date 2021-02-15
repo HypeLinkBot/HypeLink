@@ -13,7 +13,7 @@ module.exports = {
     alias: ['wl'],
     guild: true,
     async execute(message, args, client, prefix) {
-        if (!message.member.hasPermission('administrator')) {
+        if (!message.member.hasPermission('ADMINISTRATOR')) {
             const embed = new Discord.MessageEmbed()
                 .setColor(e.red)
                 .setDescription(

@@ -32,9 +32,15 @@ module.exports = {
         }
 
         if (role == undefined || role == null) {
+            let msg = `${e.x} **This server doesn\'t have a configured \`Verified\` role.**`
+            if (message.member.hasPermission('ADMINISTRATOR')) {
+                msg += `\n${e.bunk} Use \`${prefix}setrole Verifed [role id]\` to set a preexisting verified role,\n ${e.bunk} or use \`${prefix}createroles\` to automatically create missing roles.`;
+            }
+
             const embed = new Discord.MessageEmbed()
-                .setColor(e.red)
-                .setDescription(`${e.x} This server doesn\'t have a configured \`Verified\` role.\n\n${e.bunk} If you have admin, use \`${prefix}setrole Verifed [role id]\` to set a preexisting verified role,\n ${e.bunk} or use \`${prefix}createroles\` to automatically create missing roles.`);
+                .setColor(ee.red)
+                .setDescription(msg);
+
             return message.channel.send(embed);
         }
 

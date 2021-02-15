@@ -91,7 +91,7 @@ client.on('message', async message => {
     if (command == 'help') {
         let helplist = ``;
         client.commands.forEach((cmd) => {
-            if (cmd.name !== 'eval')
+            if (cmd.name !== 'eval' && cmd.name !== 'db')
                 helplist += `\`${prefix}${cmd.name}\` - ${cmd.description}\n`;
         })
 

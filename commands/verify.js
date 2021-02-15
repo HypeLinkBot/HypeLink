@@ -84,7 +84,7 @@ module.exports = {
             if (body.error) {
                 const embed = new Discord.MessageEmbed()
                     .setColor(ee.red)
-                    .setDescription(`${e.x} **${body.errorMsg}**\n${e.bunk} Double check your username and try again in a few minutes.`);
+                    .setDescription(`${e.x} **${body.errorMsg}**\nDouble check your username and try again in a few minutes.`);
 
                 return newmsg.edit(embed);
             }
@@ -132,7 +132,7 @@ module.exports = {
 
                 if (!success) return;
 
-                let desc = `${e.check} **You're all set**!\n${e.bunk} <@!${message.author.id}> verified as\n${e.bunk} \`${body.name}\`\n\n`;
+                let desc = `${e.check} **You're all set**!\n<@!${message.author.id}> verified as \`${body.name}\`\n\n<:namemc:810626872990892083> [NameMC Profile](https://namemc.com/${body.uuid})\n📈 [Hypixel Stats](https://plancke.io/hypixel/player/stats/${body.uuid})\n\n`;
 
                 // switch (body.name.toLowerCase()) {
                 //     case 'xdabdoub':
@@ -157,7 +157,7 @@ module.exports = {
 
                 let allowUnv = db.get(`${message.guild.id}.allow_unverify`);
                 if (allowUnv == null || allowUnv == true) {
-                    desc += `${e.bunk} To unverify, use the command \`${prefix}unverify\``;
+                    // desc += `${e.bunk} To unverify, use the command \`${prefix}unverify\``;
                 }
 
                 let successembed = new Discord.MessageEmbed()
