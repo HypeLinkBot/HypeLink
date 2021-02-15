@@ -5,6 +5,12 @@ I started working on bots again and decided to remake HyVerify since it was a me
 
 ### Invite the bot to your own server by [clicking here](https://bonk.ml/invite)
 
+## Commands
+
+Refer to the bot's [Hypixel thread](https://hypixel.net/threads/hypelink-hypixel-and-discord-verification-bot.3843125/) for the list of commands.
+
+---
+
 ### How to run the bot locally:
 
 - Install nodejs from [here](https://nodejs.org/en/)
@@ -27,4 +33,9 @@ I started working on bots again and decided to remake HyVerify since it was a me
 ```
 - Use `node app.js` to start the bot
 
-Refer to the bot's [Hypixel thread](https://hypixel.net/threads/hypelink-hypixel-and-discord-verification-bot.3843125/) for the list of commands.
+### Deploy to Heroku
+
+<a href="https://heroku.com/deploy">
+  <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
+</a>
+
