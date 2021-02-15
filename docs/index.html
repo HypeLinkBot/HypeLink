@@ -19,6 +19,7 @@
     <meta property='og:image' content='https://bonk.ml/circle_256.png'>
     <link rel="icon" type="image/png" href="https://bonk.ml/circle_256.png" />
 
+    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 
@@ -49,42 +50,72 @@
             margin: 10px;
             padding: 10px;
         }
+        
+        img.emoji {
+            height: 1.2em;
+            width: 1.2em;
+            margin: 0 .05em 0 .1em;
+            vertical-align: -0.25em;
+        }
     </style>
 </head>
 
 <body>
     <br>
     <div class="container-sm">
+        <div class="alert alert-warning" role="alert">
+            <b>since 12:05pm est</b>: high latency (2000ms+) problems
+        </div>
+
         <div class="jumbotron">
             <h1 class="display-4 vert"><img src='circle_256.png' class='logoh1 vert' height='64px'> HypeLink</h1>
             <p class="lead">Hypixel & Discord Verification Bot</p>
             <hr class="my-4">
             <p>A once private guild Discord bot for linking your Hypixel profile to Discord.</p>
             <p class="lead">
-                <!--<a class="btn btn-outline-primary btn-lg" href="#" role="button">Learn more</a>-->
-                <a class="btn btn-outline-primary btn-lg" href="https://foobball.github.io/HypeLink/invite/" role="button">Invite</a>
-                <a class="btn btn-outline-primary btn-lg vert" href="https://github.com/foobball/HypeLink" target='_blank' role="button"><img class='vert ghlogo' src='git.png' height='23px'> GitHub</a>
-                <a class="btn btn-outline-primary btn-lg vert" href="https://hypixel.net/threads/hypelink-hypixel-and-discord-verification-bot.3843125/" role="button"><img class='vert ghlogo' src='hypixel.png' height='23px'> Thread</a>
+                <center>
+                    <!--<a class="btn btn-outline-primary btn-lg" href="#" role="button">Learn more</a>-->
+                    <a style='margin:4px;' class="btn btn-outline-success btn-lg" href="https://foobball.github.io/HypeLink/invite/" role="button">Invite to your server</a>
+                    <a class="btn btn-outline-primary btn-lg vert" href="https://github.com/foobball/HypeLink" target='_blank' role="button"><img class='vert ghlogo' src='git.png' height='23px'> GitHub</a>
+                    <a class="btn btn-outline-primary btn-lg vert" href="https://hypixel.net/threads/hypelink-hypixel-and-discord-verification-bot.3843125/" role="button"><img class='vert ghlogo' src='hypixel.png' height='23px'> Thread</a>
+                </center>
             </p>
         </div>
     </div>
 
-    <div class="container-md">
+    <div class="container-sm">
         <hr>
         <div class="jumbotron">
             <h1 class="display-6 vert">Permissions</h1>
             <p>
-                <b>Manage Roles</b> - For giving the verified role<br>
-                <b>Manage Nicknames</b><a style='color:red;'>*</a> - Change's the user's nickname once verified<br>
+                <b>Manage Roles</b> - For giving the verified role (and rank roles)<br>
+                <b>Manage Nicknames</b><a style='color:red;'>*</a> - Change's the user's nickname once verified (setting must be enabled)<br>
                 <b>Read Messages</b> - Lets the bot check for commands that start with the prefix<br>
                 <b>Send Messages</b> - For responding to bot commands<br>
-                <b>Manage Messages</b><a style='color:red;'>*</a> - idk for this one lmfao<br>
+                <b>Manage Messages</b><a style='color:red;'>*</a> - Delete bot invocation commands<br>
                 <b>Embed Links</b> - Most of the bot's messages are embeds<br>
-                <b>Attach Files</b><a style='color:red;'>*</a> - idrk for this one too<br>
+                <b>Attach Files</b><a style='color:red;'>*</a> - To allow the bot to send verification instructions<br>
                 <b>Add Reactions</b><a style='color:red;'>*</a> - Makes it obvious that the bot responded to some messages<br>
                 <b>Use External Emojis</b> - Makes the embeds look nicer
             </p>
             <i><a style='color:red;'>*</a>Not required</i>
+        </div>
+    </div>
+
+    <div class="container-sm">
+        <hr>
+        <div class="jumbotron">
+            <h1 class="display-6 vert">Changelog</h1>
+
+            <div>
+                <h3>2/14/21</h3>
+                <ul style='margin-left:20px;'>
+                    <li><b>Fixed visual settings bug</b></li>
+                    <li><b>Added NameMC & Plancke links to successfully verified embed</b></li>
+                    <li><b>Pings user in verified embed</b> (requested by Gogeta 😳)</li>
+                    <li><b>Added the RemoveRoleOnVerify setting</b> (also requested by Gogeta 😳)</li>
+                </ul>
+            </div>
         </div>
     </div>
 
@@ -96,6 +127,10 @@
             </p>
         </div>
     </footer>
+
+    <script>
+        document.body.innerHTML = twemoji.parse(document.body.innerHTML);
+    </script>
 </body>
 
 </html>

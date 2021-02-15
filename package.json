@@ -2,9 +2,12 @@
     "name": "hypebot",
     "version": "1.0.0",
     "description": "",
-    "main": "app.js",
+    "main": "shard.js",
     "scripts": {
-        "start": "node app"
+        "start": "node shard"
+    },
+    "engines": {
+        "node": "14.x"
     },
     "author": "",
     "license": "ISC",

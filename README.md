@@ -19,7 +19,7 @@ I started working on bots again and decided to remake HyVerify since it was a me
   "report_channel": "channel id of where reports should be sent",
   "suggest_channel": "channel id of where suggestions should be sent",
   
-  "invite_link": "the full bot invite link (e.g. https://discord.com/api/oauth2/authorize?client_id=478330652119400451&permissions=8&scope=bot)",
+  "invite_link": "the full bot invite link (e.g. https://discord.com/api/oauth2/authorize?client_id=478330652119400451&permissions=8&redirect_uri=https://bonk.ml/redir&response_type=code&scope=bot%20identify&response_type=code)",
   "default_prefix": "!",
   "name": "HypeLink",
   "owner": "your discord id"
