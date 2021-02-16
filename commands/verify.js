@@ -84,7 +84,7 @@ module.exports = {
             if (body.error) {
                 const embed = new Discord.MessageEmbed()
                     .setColor(ee.red)
-                    .setDescription(`${e.x} **${body.errorMsg}**\nDouble check your username and try again in a few minutes.`);
+                    .setDescription(`${e.x} **${body.errorMsg}**\nDouble check your username and try again :pleading_face:.`);
 
                 return newmsg.edit(embed);
             }
