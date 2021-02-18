@@ -7,6 +7,9 @@ const consola = require('consola');
 const ranks = require('./ranks.json');
 const e = require('./embeds.json');
 const owner = require('./lib/owner');
+const blacklistedguilds = [
+    '772905819448672256'
+];
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
@@ -63,74 +66,87 @@ client.on("warn", (e) => {
 
 client.on('guildCreate', (guild) => {
     consola.info(`😳 Added to ${guild.name} (${guild.id})`);
+
+    if (blacklistedguilds.indexOf(guild.id) > -1) {
+        consola.info(`😱 ${guild.name} (${guild.id}) is blacklisted`);
+        guild.leave();
+    }
 })
 
 client.on('guildDelete', (guild) => {
     consola.info(`😭 Removed from ${guild.name} (${guild.id})`)
 })
 
-client.on('message', async message => {
-            if (message.author.bot) return;
+client.on('message', async (message) => {
+    if (message.author.bot) return;
+    let customprefix = '!';
+    if (message.guild) customprefix = db.get(`${message.guild.id}.prefix`);
+    const prefix = customprefix || config.default_prefix;
+    let args;
+    if (message.content.startsWith(prefix))
+        args = message.content.slice(prefix.length).trim().split(/ +/);
+    else if (message.content.startsWith(`<@!${client.user.id}>`))
+        args = message.content.slice(`<@!${client.user.id}>`.length).trim().split(/ +/);
+    else if (message.content.startsWith(`<@${client.user.id}>`)) {
+        args = message.content.slice(`<@${client.user.id}>`.length).trim().split(/ +/);
+    } else return;
 
-            let customprefix = '!';
+    let command = args.shift().toLowerCase();
 
-            if (message.guild) customprefix = db.get(`${message.guild.id}.prefix`);
-            const prefix = customprefix || config.default_prefix;
+    if (message.guild) {
+        let cig = message.guild.members.cache.get(client.user.id)
+        if (
+            !cig.hasPermission('EMBED_LINKS') ||
+            !cig.hasPermission('USE_EXTERNAL_EMOJIS') ||
+            !cig.hasPermission('MANAGE_ROLES')
+        ) {
+            let reqperms = [];
 
-            let args;
-            if (message.content.startsWith(prefix))
-                args = message.content.slice(prefix.length).trim().split(/ +/);
-            else if (message.content.startsWith(`<@!${client.user.id}>`))
-                args = message.content.slice(`<@!${client.user.id}>`.length).trim().split(/ +/);
-            else if (message.content.startsWith(`<@${client.user.id}>`)) {
-                args = message.content.slice(`<@${client.user.id}>`.length).trim().split(/ +/);
-            } else return;
+            if (!cig.hasPermission('EMBED_LINKS')) reqperms.push(' • \`Embed Links\`');
+            if (!cig.hasPermission('USE_EXTERNAL_EMOJIS')) reqperms.push(' • \`Use External Emojis\`');
+            if (!cig.hasPermission('MANAGE_ROLES')) reqperms.push(' • \`Manage Roles\`');
 
-            let command = args.shift().toLowerCase();
+            return message.channel.send(`:x: **I'm missing the following permissions:**\n${reqperms.join('\n')}`).catch();
+        }
+    }
 
-            if (command == 'help') {
-                let helplist = ``;
-                client.commands.forEach((cmd) => {
-                    if (cmd.name !== 'eval' && cmd.name !== 'db')
-                        helplist += `\`${prefix}${cmd.name}\` - ${cmd.description}\n`;
-                })
-
-                helplist += `\n<:logo:791084884398702632> Thread: https://hypixel.net/threads/hypelink-hypixel-and-discord-verification-bot.3843125/\n<:hypelink:806564809386623097> Website: https://bonk.ml/`
-
-                const embed = new Discord.MessageEmbed()
-                    .setDescription(helplist)
-                    .setTitle('List of Commands')
-                    .setThumbnail('https://hotemoji.com/images/dl/7/rolled-up-newspaper-emoji-by-twitter.png')
-
-                message.author.send(embed).then(() => {
-                    if (message.guild) message.react('✅');
-                }).catch(() => {
-                    const embed = new Discord.MessageEmbed()
-                        .setColor(e.red)
-                        .setDescription(`${e.x} **Please enable DMs from server members.**`);
-                    message.channel.send(embed).then((newmsg) => {
-                        newmsg.delete({ timeout: 4000 });
-                    });
+    if (command == 'help') {
+        let helplist = ``;
+        client.commands.forEach((cmd) => {
+            if (cmd.name !== 'eval' && cmd.name !== 'db')
+                helplist += `\`${prefix}${cmd.name}\` - ${cmd.description}\n`;
+        })
+        helplist += `\n<:logo:791084884398702632> Thread: https://hypixel.net/threads/hypelink-hypixel-and-discord-verification-bot.3843125/\n<:hypelink:806564809386623097> Website: https://bonk.ml/`
+        const embed = new Discord.MessageEmbed()
+            .setDescription(helplist)
+            .setTitle('List of Commands')
+            .setThumbnail('https://hotemoji.com/images/dl/7/rolled-up-newspaper-emoji-by-twitter.png')
+        message.author.send(embed).then(() => {
+            if (message.guild) message.react('✅');
+        }).catch(() => {
+            const embed = new Discord.MessageEmbed()
+                .setColor(e.red)
+                .setDescription(`${e.x} **Please enable DMs from server members.**`);
+            message.channel.send(embed).then((newmsg) => {
+                newmsg.delete({
+                    timeout: 4000
                 });
+            });
+        });
+        return;
+    }
+    if (!client.commands.has(command)) {
+        let prev = command;
+        client.commands.forEach((cmd) => {
+            if (cmd.alias.indexOf(command) !== -1) {
+                command = cmd.name;
                 return;
             }
-
-            if (!client.commands.has(command)) {
-                let prev = command;
-
-                client.commands.forEach((cmd) => {
-                    if (cmd.alias.indexOf(command) !== -1) {
-                        command = cmd.name;
-                        return;
-                    }
-                })
-
-                if (command == prev) return;
-            }
-
-            try {
-                console.log(`"${message.author.tag}" ran "!${command} ${args}" in ${(message.guild) ? `"${message.guild.name}" (${message.guild.id})` : 'DMs'}`);
-
+        })
+        if (command == prev) return;
+    }
+    try {
+        console.log(`"${message.author.tag}" ran "!${command} ${args}" in ${(message.guild) ? `"${message.guild.name}" (${message.guild.id})` : 'DMs'}`);
         let guildonly = client.commands.get(command).guild;
         if (guildonly && !message.guild) {
             return message.channel.send(`${e.x} This command can only be ran in guilds.`).catch();

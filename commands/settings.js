@@ -109,8 +109,8 @@ module.exports = {
                             `⚙️ **Setting**: ${dict[val].short}\n` +
                             `${e.bunk} **Description**: ${dict[val].desc}\n` +
                             `${e.bunk} **Value**: ${(currentval[val] || currentval[val] == null) ? e.check + ' On' : e.x + ' Off'}\n` +
-                            `\n*${e.bunk} To change this value, run \`${prefix}settings ${val} [true/false]\`*\n` +
-                            `${e.bunk} *Use \`${prefix}settings\` for a full list of values*`
+                            `\n${e.bunk} To change this value, run \`${prefix}settings ${val} [true/false]\`\n` +
+                            `${e.bunk} Use \`${prefix}settings\` for a full list of values`
                         )
 
                     if (dict[val].short == 'RemoveRoleOnVerify') {
@@ -198,8 +198,8 @@ module.exports = {
                     .setDescription(
                         `⚙️ **Setting Updated**: ${dict[val].short}\n` +
                         `${e.bunk} **New value**: ${newdbval}\n` +
-                        `\n*${e.bunk} To change this value, run \`${prefix}settings ${val} [true/false]\`*\n` +
-                        `${e.bunk} *Use \`${prefix}settings\` for a full list of values*`
+                        `\n${e.bunk} To change this value, run \`${prefix}settings ${val} [true/false]\`\n` +
+                        `${e.bunk} Use \`${prefix}settings\` for a full list of values`
                     )
 
                 if (isRemoveRole) {

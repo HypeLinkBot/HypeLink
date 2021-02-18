@@ -79,8 +79,6 @@ module.exports = {
         let username = args.join('');
 
         get.form(username, async(body) => {
-            //console.log(body);
-
             if (body.error) {
                 const embed = new Discord.MessageEmbed()
                     .setColor(ee.red)
