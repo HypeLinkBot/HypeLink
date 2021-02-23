@@ -9,9 +9,9 @@ module.exports = {
     name: 'verify',
     description: 'Verify with Hypixel',
     cat: 'settings',
-    alias: ['v'],
+    alias: ['v', 'guide'],
     guild: true,
-    async execute(message, args, client, prefix) {
+    async execute(message, args, client, prefix, cmdname) {
         let roleid = db.get(`${message.guild.id}.roles.verified`);
         let role = message.guild.roles.cache.get(roleid);
 
@@ -34,29 +34,6 @@ module.exports = {
             return;
         }
 
-        if (role == undefined || role == null) {
-            let msg = `${e.x} **This server doesn\'t have a configured \`Verified\` role.**`
-            if (message.member.hasPermission('ADMINISTRATOR')) {
-                msg += `\n${e.bunk} Use \`${prefix}setrole Verifed [role id]\` to set a preexisting verified role,\n ${e.bunk} or use \`${prefix}createroles\` to automatically create missing roles.`;
-            }
-
-            const embed = new Discord.MessageEmbed()
-                .setColor(ee.red)
-                .setDescription(msg);
-
-            return message.channel.send(embed);
-        }
-
-        if (message.member.roles.cache.has(roleid)) {
-            const embed = new Discord.MessageEmbed()
-                .setColor(ee.red)
-                .setDescription(`${e.x} You\'re already verified`);
-
-            // \n${e.tab} Use \`${prefix}unverify\` to unverify yourself.
-
-            return message.channel.send(embed);
-        }
-
         if (args.join('').length < 2) {
             let text = `**${e.check} Verification Instructions**:\n` +
                 ` • Log on to Hypixel\n` +
@@ -67,6 +44,33 @@ module.exports = {
                 ` • Type \`${prefix}${this.name} [Your Minecraft Username]\` here`
 
             return message.channel.send(text += '\nhttps://gfycat.com/dentaltemptingleonberger');
+        }
+
+        if (role == undefined || role == null) {
+            let hyverifyrole = message.guild.roles.cache.find(r => r.name == "Hypixel Verified");
+            if (hyverifyrole !== undefined && hyverifyrole !== null) {
+                db.set(`${message.guild.id}.roles.verified`, hyverifyrole.id);
+                role = hyverifyrole;
+            } else {
+                let msg = `${e.x} **This server doesn\'t have a configured \`Verified\` role.**`
+                if (message.member.hasPermission('ADMINISTRATOR')) {
+                    msg += `\n${e.bunk} Use \`${prefix}setrole Verifed [role id]\` to set a preexisting verified role,\n ${e.bunk} or use \`${prefix}createroles\` to automatically create missing roles.`;
+                }
+
+                const embed = new Discord.MessageEmbed()
+                    .setColor(ee.red)
+                    .setDescription(msg);
+
+                return message.channel.send(embed);
+            }
+        }
+
+        if (message.member.roles.cache.has(roleid)) {
+            const embed = new Discord.MessageEmbed()
+                .setColor(ee.red)
+                .setDescription(`${e.x} You\'re already verified`);
+
+            return message.channel.send(embed);
         }
 
         let newmsg = await message.channel.send(new Discord.MessageEmbed()
@@ -92,10 +96,9 @@ module.exports = {
                 const embed = new Discord.MessageEmbed()
                     .setColor(ee.red)
                     .setDescription(
-                        `${e.x} **Error: Tag Mismatch**\n\`${body.name}\`'s set Discord (\`${(!body.discord) ? 'None#0000' : body.discord}\`)\n` +
+                        `${e.x} **Tag Mismatch**\n\`${body.name}\`'s set Discord (\`${(!body.discord) ? 'None#0000' : body.discord}\`)\n` +
                         `doesn't match your tag (\`${message.author.tag}\`)\n\n` +
-                        `**If you just updated it, wait a minute and try again.**` +
-                        `\nFor linking instructions, do \`${prefix}verify\``
+                        `:point_right: **For linking instructions, do \`${prefix}guide\`** :point_left:`
                     )
 
                 return newmsg.edit(embed);
@@ -115,7 +118,8 @@ module.exports = {
                 if (db.get(`${message.guild.id}.rank_role`) == null || db.get(`${message.guild.id}.rank_role`) == true) {
                     if (body.rank !== null) {
                         let roleid = db.get(`${message.guild.id}.roles.${body.rank}`)
-                        if (roleid !== null && roleid !== undefined) {
+                        let actrole = message.guild.roles.cache.get(roleid);
+                        if (actrole !== null && actrole !== undefined) {
                             await message.member.roles.add(roleid).catch(() => {
                                 const embed = new Discord.MessageEmbed()
                                     .setColor(ee.red)

@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const fs = require('fs');
+const Fuse = require('fuse.js');
 const stats = require('./lib/getStats');
 const db = require('quick.db');
 const config = require('./config.json');
@@ -7,9 +8,8 @@ const consola = require('consola');
 const ranks = require('./ranks.json');
 const e = require('./embeds.json');
 const owner = require('./lib/owner');
-const blacklistedguilds = [
-    '772905819448672256'
-];
+
+let commandlist = ['help'];
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
@@ -17,8 +17,25 @@ client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
+
+    commandlist.push(command.name);
+
     client.commands.set(command.name, command);
 }
+
+const getUserCount = () => {
+    let memberCount = 0;
+    client.guilds.cache.forEach(g => {
+        memberCount += g.memberCount;
+    })
+    return memberCount;
+}
+
+const fuse = new Fuse(commandlist, {
+    includeScore: true,
+    threshold: 0.26,
+    minMatchCharLength: 2
+});
 
 if (!db.get('verified')) db.set('verified', 0);
 if (!db.get('unverified')) db.set('unverified', 0);
@@ -30,8 +47,8 @@ let currStatus = 0;
 function updateStatus() {
     let statusList = [
         client.guilds.cache.size.toLocaleString() + " servers 😳",
-        db.get('verified') + " verified ✅",
-        client.users.cache.size.toLocaleString() + " users 🤼"
+        db.get('verified').toLocaleString() + " verified ✅",
+        getUserCount().toLocaleString() + " users 🤼"
     ]
     setStatus(statusList[currStatus]);
     currStatus++;
@@ -41,7 +58,7 @@ function updateStatus() {
 
 function setStatus(text, type = "PLAYING") {
     client.user.setActivity({
-        name: "www.bonk.ml | " + text,
+        name: "https://bonk.ml/ | " + text,
         type
     })
 }
@@ -66,18 +83,39 @@ client.on("warn", (e) => {
 
 client.on('guildCreate', (guild) => {
     consola.info(`😳 Added to ${guild.name} (${guild.id})`);
-
-    if (blacklistedguilds.indexOf(guild.id) > -1) {
-        consola.info(`😱 ${guild.name} (${guild.id}) is blacklisted`);
-        guild.leave();
-    }
 })
+
+const helpcmd = (message, prefix) => {
+    let helplist = ``;
+    client.commands.forEach((cmd) => {
+        if (cmd.name !== 'eval' && cmd.name !== 'db' && cmd.name !== 'keystats')
+            helplist += `\`${prefix}${cmd.name}\` - ${cmd.description}\n`;
+    })
+    helplist += `\n<:logo:791084884398702632> Thread: https://hypixel.net/threads/hypelink-hypixel-and-discord-verification-bot.3843125/\n<:hypelink:806564809386623097> Website: https://bonk.ml/\n\n**Remember to vote for HypeLink on [top.gg](https://top.gg/bot/${client.user.id}/vote) :grin:**`
+    const embed = new Discord.MessageEmbed()
+        .setDescription(helplist)
+        .setTitle('List of Commands')
+        .setThumbnail('https://hotemoji.com/images/dl/7/rolled-up-newspaper-emoji-by-twitter.png')
+    message.author.send(embed).then(() => {
+        if (message.guild) message.react('✅');
+    }).catch(() => {
+        const embed = new Discord.MessageEmbed()
+            .setColor(e.red)
+            .setDescription(`${e.x} **Please enable DMs from server members.**`);
+        message.channel.send(embed).then((newmsg) => {
+            newmsg.delete({
+                timeout: 4000
+            });
+        });
+    });
+    return;
+}
 
 client.on('guildDelete', (guild) => {
-    consola.info(`😭 Removed from ${guild.name} (${guild.id})`)
+    consola.info(`😭 Removed from ${guild.name} (${guild.id})`);
 })
 
-client.on('message', async (message) => {
+client.on('message', async(message) => {
     if (message.author.bot) return;
     let customprefix = '!';
     if (message.guild) customprefix = db.get(`${message.guild.id}.prefix`);
@@ -95,8 +133,7 @@ client.on('message', async (message) => {
 
     if (message.guild) {
         let cig = message.guild.members.cache.get(client.user.id)
-        if (
-            !cig.hasPermission('EMBED_LINKS') ||
+        if (!cig.hasPermission('EMBED_LINKS') ||
             !cig.hasPermission('USE_EXTERNAL_EMOJIS') ||
             !cig.hasPermission('MANAGE_ROLES')
         ) {
@@ -111,29 +148,7 @@ client.on('message', async (message) => {
     }
 
     if (command == 'help') {
-        let helplist = ``;
-        client.commands.forEach((cmd) => {
-            if (cmd.name !== 'eval' && cmd.name !== 'db')
-                helplist += `\`${prefix}${cmd.name}\` - ${cmd.description}\n`;
-        })
-        helplist += `\n<:logo:791084884398702632> Thread: https://hypixel.net/threads/hypelink-hypixel-and-discord-verification-bot.3843125/\n<:hypelink:806564809386623097> Website: https://bonk.ml/`
-        const embed = new Discord.MessageEmbed()
-            .setDescription(helplist)
-            .setTitle('List of Commands')
-            .setThumbnail('https://hotemoji.com/images/dl/7/rolled-up-newspaper-emoji-by-twitter.png')
-        message.author.send(embed).then(() => {
-            if (message.guild) message.react('✅');
-        }).catch(() => {
-            const embed = new Discord.MessageEmbed()
-                .setColor(e.red)
-                .setDescription(`${e.x} **Please enable DMs from server members.**`);
-            message.channel.send(embed).then((newmsg) => {
-                newmsg.delete({
-                    timeout: 4000
-                });
-            });
-        });
-        return;
+        return helpcmd(message, prefix);
     }
     if (!client.commands.has(command)) {
         let prev = command;
@@ -143,10 +158,15 @@ client.on('message', async (message) => {
                 return;
             }
         })
-        if (command == prev) return;
+        if (command == prev) {
+            const result = fuse.search(command);
+
+            if (result.length < 1) return;
+            command = result[0].item;
+            if (command == 'help') return helpcmd(message, prefix);
+        }
     }
     try {
-        console.log(`"${message.author.tag}" ran "!${command} ${args}" in ${(message.guild) ? `"${message.guild.name}" (${message.guild.id})` : 'DMs'}`);
         let guildonly = client.commands.get(command).guild;
         if (guildonly && !message.guild) {
             return message.channel.send(`${e.x} This command can only be ran in guilds.`).catch();

@@ -8,6 +8,14 @@ function addzero(num) {
     return (num < 10) ? "0" + num : num;
 }
 
+const getUserCount = (client) => {
+    let memberCount = 0;
+    client.guilds.cache.forEach(g => {
+        memberCount += g.memberCount;
+    })
+    return memberCount;
+}
+
 module.exports = {
     name: 'stats',
     description: 'Total stats for the bot',
@@ -35,12 +43,12 @@ module.exports = {
             .setColor('YELLOW')
             .setDescription(
                 `:flushed: **Bot Stats**\n` +
-                `${e.bunk} 🛡 **Servers**: ${client.guilds.cache.size}\n` +
+                `${e.bunk} 🛡 **Servers**: ${client.guilds.cache.size.toLocaleString()}\n` +
+                `${e.bunk} 👤 **Users**: ${getUserCount(client).toLocaleString()}\n` +
                 `${e.bunk} ✅ **Verifies**: ${db.get('verified').toLocaleString()}\n` +
                 `${e.bunk} ❌ **Unverifies**: ${db.get('unverified').toLocaleString()}\n` +
                 `${e.bunk} ♻ **Last restart**: ${datestring}\n\n` +
-                `${e.bunk} **Bot Owner:** \`${owner(client).tag}\`\n` +
-                `${e.bunk} *if this tag is invalid, run this command again*`
+                `${e.bunk} **Bot Owner:** \`${owner(client).tag}\``
             )
 
 
