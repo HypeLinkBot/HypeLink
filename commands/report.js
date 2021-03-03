@@ -7,14 +7,14 @@ module.exports = {
     description: 'Report a problem with the bot',
     cat: 'other',
     guild: false,
-    alias: ['rep', 'problem'],
+    alias: ['rep', 'problem', 'bug', 'bugreport'],
     execute(message, args, client, prefix) {
         const reportchannel = client.channels.cache.get(report_channel);
 
         if (args.join(' ').length < 10) {
             const embed = new Discord.MessageEmbed()
                 .setColor(e.red)
-                .setDescription(`${e.x} **Your report must be at least 10 characters.**\n${e.bunk} Example: \`${prefix}report Can't verify\``);
+                .setDescription(`${e.x} **Your report must be at least 10 characters.**\nExample: \`${prefix}report Can't verify\``);
             message.channel.send(embed).then((newmsg) => {
                 if (message.guild) newmsg.delete({ timeout: 10000 }).catch();
             });
@@ -29,7 +29,7 @@ module.exports = {
             }).catch(() => {
                 const embed = new Discord.MessageEmbed()
                     .setColor(e.red)
-                    .setDescription(`${e.x} **Your report couldn't be submitted**\n${e.bunk} uhhh this should never happen, please dm foob`);
+                    .setDescription(`${e.x} **Your report couldn't be submitted**\nuhhh this should never happen, please dm foob`);
                 message.channel.send(embed).then((newmsg) => {
                     if (message.guild) newmsg.delete({ timeout: 10000 }).catch();
                 });

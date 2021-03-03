@@ -2,7 +2,6 @@ const db = require('quick.db');
 const consola = require('consola');
 const Discord = require('discord.js');
 const e = require('../embeds.json');
-const get = require('../lib/getStats');
 const config = require('../config.json');
 const ranks = require('../ranks.json')
 
@@ -18,7 +17,7 @@ module.exports = {
                 .setColor(e.red)
                 .setDescription(
                     `${e.x} **You don't have permission to use this command**\n` +
-                    `${e.bunk} You need the **Administrator** permission to use this command.`
+                    `You need the **Administrator** permission to use this command.`
                 )
 
             return message.channel.send(embed).then((newmsg) => {
@@ -30,7 +29,7 @@ module.exports = {
             .setColor('YELLOW')
             .setDescription(
                 `:wave: **Welcome**\n` +
-                `${e.bunk} Thanks for using my bot, ${config.name}!`
+                `Thanks for using my bot, ${config.name}!`
             ))
 
         let progress = await message.channel.send(new Discord.MessageEmbed()
@@ -82,7 +81,8 @@ module.exports = {
             .setColor('YELLOW')
             .setDescription(
                 `⚙ **Whitelist channel for verification**\n` +
-                `${e.bunk} Type \`${prefix}whitelist\` in any channel to set it as the only channel\n${e.bunk} where \`${prefix}verify\` is allowed.`
+                `Type \`${prefix}whitelist\` in any channel to set it as the only channel\n` +
+                `where \`${prefix}verify\` is allowed.`
             )
 
         return message.channel.send(whitelist);

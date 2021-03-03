@@ -11,7 +11,7 @@ module.exports = {
         const invite = new Discord.MessageEmbed()
             .setDescription(
                 `${e.github} **Github Link**\n` +
-                `${e.bunk} https://github.com/foobball/HypeLink`
+                `https://github.com/foobball/HypeLink`
             )
 
         if (message.guild) {

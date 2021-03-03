@@ -1,12 +1,7 @@
 const Discord = require('discord.js');
-const { invite_link } = require('../config.json');
 const e = require('../embeds.json');
 const db = require('quick.db');
-const owner = require('../lib/owner');
-
-function addzero(num) {
-    return (num < 10) ? "0" + num : num;
-}
+const owner = require('../owner.json');
 
 const getUserCount = (client) => {
     let memberCount = 0;
@@ -22,33 +17,40 @@ module.exports = {
     cat: 'other',
     alias: ['st'],
     guild: false,
-    execute(message, args, client, prefix) {
+    async execute(message, args, client, prefix) {
         let dateNow = new Date();
         let dateStart = new Date(db.get('startup'));
 
-        let seconds = Math.floor((dateNow - (dateStart)) / 1000);
+        let seconds = Math.floor(client.uptime / 1000);
         let minutes = Math.floor(seconds / 60);
         let hours = Math.floor(minutes / 60);
         let days = Math.floor(hours / 24);
 
         let datestring = '';
 
-        if (days !== 0) datestring = `${days} day${(days == 1) ? '' : 's'}`;
-        else if (hours !== 0) datestring = `${hours} hour${(hours == 1) ? '' : 's'}`;
-        else if (minutes !== 0) datestring = `${minutes} minute${(minutes == 1) ? '' : 's'}`;
-        else datestring = `${seconds} second${(seconds == 1) ? '' : 's'}`;
+        if (days !== 0) datestring = `${days} day${(days === 1) ? '' : 's'}`;
+        else if (hours !== 0) datestring = `${hours} hour${(hours === 1) ? '' : 's'}`;
+        else if (minutes !== 0) datestring = `${minutes} minute${(minutes === 1) ? '' : 's'}`;
+        else datestring = `${seconds} second${(seconds === 1) ? '' : 's'}`;
         datestring += ' ago';
+
+        let servercount = await client.shard.fetchClientValues('guilds.cache.size');
+        let servernum = 0;
+
+        servercount.forEach(val => {
+            servernum += val;
+        })
 
         const statslist = new Discord.MessageEmbed()
             .setColor('YELLOW')
             .setDescription(
                 `:flushed: **Bot Stats**\n` +
-                `${e.bunk} 🛡 **Servers**: ${client.guilds.cache.size.toLocaleString()}\n` +
-                `${e.bunk} 👤 **Users**: ${getUserCount(client).toLocaleString()}\n` +
-                `${e.bunk} ✅ **Verifies**: ${db.get('verified').toLocaleString()}\n` +
-                `${e.bunk} ❌ **Unverifies**: ${db.get('unverified').toLocaleString()}\n` +
-                `${e.bunk} ♻ **Last restart**: ${datestring}\n\n` +
-                `${e.bunk} **Bot Owner:** \`${owner(client).tag}\``
+                `🛡 **Servers**: ${servernum.toLocaleString()}\n` +
+                `👤 **Users**: ${getUserCount(client).toLocaleString()}\n` +
+                `✅ **Verifies**: ${db.get('verified').toLocaleString()}\n` +
+                `❌ **Unverifies**: ${db.get('unverified').toLocaleString()}\n` +
+                `♻ **Last restart**: ${datestring}\n\n` +
+                `**Bot Owner:** \`${owner.tag}\``
             )
 
 

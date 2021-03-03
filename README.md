@@ -7,35 +7,27 @@ I started working on bots again and decided to remake HyVerify since it was a me
 
 ## Commands
 
-Refer to the bot's [Hypixel thread](https://hypixel.net/threads/hypelink-hypixel-and-discord-verification-bot.3843125/) for the list of commands.
+|---|---|
+|**!help**|Displays this list of commands|
+|**!setup**|Instantly creates the required roles|
+|**!settings**|Shows list of settings for a server|
+|**!verify [minecraft username]**|Attempts to verify the executor as the tag supplied|
+|**!unverify**|Removes verification roles from the executor|
+|**!setrole**|Lets you assign the verified/rank roles as a different role|
+|**!whitelist**|Sets the current channel as the verification channel|
+|**!prefix**|Changes the bot's prefix|
+|!github|Displays HypeLink's Github|
+|!invite|Displays HypeLink's bot invite URL|
+|!stats|Displays uptime and users verified|
+|!ping|Test command for seeing the bot's ping|
+|!suggest [feature]|Suggest a feature for the bot|
+|!report [issue]|Report a problem with the bot|
+|**!user [minecraft username]**|Shows links and name changes for a Minecraft user|
+|**!me**|Shows links and name changes for you|
+
+
+Refer to the bot's [Hypixel thread](https://hypixel.net/threads/hypelink-hypixel-and-discord-verification-bot.3843125/) for more information.
 
 ---
 
-### How to run the bot locally:
-
-- Install nodejs from [here](https://nodejs.org/en/)
-- Clone this repo (`git clone https://github.com/foobball/HypeLink.git`)
-- Download the dependencies with `npm install`
-- Create `config.json` and use the format below:
-```json
-{
-  "hypixel_key": "your hypixel api key (do '/api new' in-game)",
-  "bot_token": "the discord bot token",
-  
-  "report_channel": "channel id of where reports should be sent",
-  "suggest_channel": "channel id of where suggestions should be sent",
-  
-  "invite_link": "the full bot invite link (e.g. https://discord.com/api/oauth2/authorize?client_id=478330652119400451&permissions=8&redirect_uri=https://bonk.ml/redir&response_type=code&scope=bot%20identify&response_type=code)",
-  "default_prefix": "!",
-  "name": "HypeLink",
-  "owner": "your discord id"
-}
-```
-- Use `node app.js` to start the bot
-
-### Deploy to Heroku
-
-<a href="https://heroku.com/deploy">
-  <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
-</a>
-
+im no longer providing instructions on how to host this locally because im tired of maintaining it.

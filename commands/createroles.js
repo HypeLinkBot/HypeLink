@@ -22,7 +22,7 @@ module.exports = {
 
         let waitembed = new Discord.MessageEmbed()
             .setColor('YELLOW')
-            .setDescription(`${e.loading} **Please wait...**\n${e.bunk} Creating missing roles`)
+            .setDescription(`${e.loading} **Please wait...**\nCreating missing roles`)
 
         let newmsg = await message.channel.send(waitembed);
         let tocreate = ["verified", "VIP", "VIP_PLUS", "MVP", "MVP_PLUS", "SUPERSTAR"];
@@ -66,7 +66,7 @@ module.exports = {
                 .catch(consola.error);
         }
 
-        let desc = e.check + ' **Created the following roles**:\n' + e.bunk + ' ';
+        let desc = e.check + ' **Created the following roles**:\n' + ' ';
 
         if (newroles.length < 1) desc += 'None';
         else desc += newroles.join(', ');

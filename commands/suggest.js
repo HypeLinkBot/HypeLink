@@ -14,7 +14,7 @@ module.exports = {
         if (args.join(' ').length < 10) {
             const embed = new Discord.MessageEmbed()
                 .setColor(e.red)
-                .setDescription(`${e.x} **Your suggestion must be at least 10 characters.**\n${e.bunk} Example: \`${prefix}suggest Guild support 🥺🙏 \``);
+                .setDescription(`${e.x} **Your suggestion must be at least 10 characters.**\nExample: \`${prefix}suggest Guild support 🥺🙏 \``);
             message.channel.send(embed).then((newmsg) => {
                 if (message.guild) newmsg.delete({ timeout: 10000 }).catch();
             });
@@ -29,7 +29,7 @@ module.exports = {
             }).catch(() => {
                 const embed = new Discord.MessageEmbed()
                     .setColor(e.red)
-                    .setDescription(`${e.x} **Your suggestion couldn't be submitted**\n${e.bunk} uhhh this should never happen`);
+                    .setDescription(`${e.x} **Your suggestion couldn't be submitted**\nuhhh this should never happen`);
                 message.channel.send(embed).then((newmsg) => {
                     if (message.guild) newmsg.delete({ timeout: 10000 }).catch();
                 });

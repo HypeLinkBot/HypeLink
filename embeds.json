@@ -1,14 +1,12 @@
 {
     "error": "https://hotemoji.com/images/dl/r/cross-mark-emoji-by-twitter.png",
     "red": "#f54e42",
-
     "green": "#5bfc56",
+    "default": "#ffc4f4",
 
     "loading": "<a:loading:718208103706918952>",
 
     "tab": "   ",
-
-    "bunk": "   ",
 
     "logo": "<:logo:791084884398702632>",
 

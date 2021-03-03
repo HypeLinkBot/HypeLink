@@ -4,28 +4,27 @@ const e = require('../embeds.json');
 const owner = require('../owner.json');
 
 module.exports = {
-    name: 'invite',
-    description: 'DMs you the bot\'s invite link',
+    name: 'support',
+    description: 'Gives support Discord link',
     cat: 'other',
     guild: false,
-    alias: ['inv', 'i'],
+    alias: ['sup', 'supp'],
     execute(message, args, client, prefix) {
         const invite = new Discord.MessageEmbed()
             .setColor('YELLOW')
             .setDescription(
-                `:pleading_face: **How to Invite**\n` +
-                `[Click here](${invite_link}) or visit https://bonk.ml/invite\n\n`
+                `:pleading_face: Join the [support server](https://discord.gg/2HnfmERMhk) for support.`
             ).setFooter(`Bot by ${owner.tag} | https://bonk.ml/`, owner.avatarURL)
 
         if (message.guild) {
             message.author.send(invite).then(() => {
-                return message.react('✅');
+                message.react('👌');
             }).catch(() => {
                 const embed = new Discord.MessageEmbed()
                     .setColor(e.red)
                     .setDescription(`${e.x} **Please enable DMs from server members.**`);
                 message.channel.send(embed).then((newmsg) => {
-                    newmsg.delete({ timeout: 10000 }).catch();
+                    newmsg.delete({ timeout: 4000 });
                 });
             });
         } else {

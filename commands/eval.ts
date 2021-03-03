@@ -1,6 +1,6 @@
 const db = require('quick.db');
-const owner = require('../lib/owner');
 const e = require('../embeds.json');
+const owner = require('../owner.json');
 
 const clean = text => {
     if (typeof(text) === "string")
@@ -16,7 +16,12 @@ module.exports = {
     guild: false,
     alias: [],
     execute(message, args, client, prefix) {
-        if (message.author.id !== owner(client).id) return message.channel.send(':flushed:').then((newmsg) => { newmsg.delete({ timeout: 4000 }).catch() }).catch();
+        const restartShard = (id = client.shard.ids) => {
+            client.shard.broadcastEval(`if (this.shard.ids.includes(${id})) process.exit();`).catch();
+            return `Shard ${id} will now restart.`;
+        }
+
+        if (message.author.id !== owner.id) return message.channel.send(':flushed:').then((newmsg) => { newmsg.delete({ timeout: 4000 }).catch() }).catch();
         try {
             const code = args.join(" ");
             let evaled = eval(code);

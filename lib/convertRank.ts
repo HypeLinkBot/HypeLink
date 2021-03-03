@@ -94,25 +94,6 @@ const ranks = {
     "DEFAULT": null
 };
 
-const colors = { // Convert name-based colors to number-based
-    "BLACK": '0',
-    "DARK_BLUE": '1',
-    "DARK_GREEN": '2',
-    "DARK_AQUA": '3',
-    "DARK_RED": '4',
-    "DARK_PURPLE": '5',
-    "GOLD": '6',
-    "GRAY": '7',
-    "DARK_GRAY": '8',
-    "BLUE": '9',
-    "GREEN": 'a',
-    "AQUA": 'b',
-    "RED": 'c',
-    "LIGHT_PURPLE": 'd',
-    "YELLOW": 'e',
-    "WHITE": 'f'
-};
-
 /**
  * Calculate the rank tag for the player object from the Hypixel API
  * @param player Player object from Hypixel API
@@ -125,10 +106,9 @@ function calcTag(player) {
         let newPackageRank = player.newPackageRank;
         let monthlyPackageRank = player.monthlyPackageRank;
         let rank = player.rank;
-        let prefix = player.prefix;
 
-        if (rank === "NORMAL") rank = null; // Don't care about normies
-        if (monthlyPackageRank === "NONE") monthlyPackageRank = null; // Don't care about cheapos
+        if (rank === "NORMAL") rank = null;
+        if (monthlyPackageRank === "NONE") monthlyPackageRank = null;
         if (packageRank === "NONE") packageRank = null;
         if (newPackageRank === "NONE") newPackageRank = null;
 
@@ -140,36 +120,6 @@ function calcTag(player) {
         */
     }
     return replaceCustomColors(ranks.DEFAULT, null, null)
-}
-
-/**
- * Parse a tag that is in Minecraft form using formatting codes
- * @param tag Tag to parse
- * @return {*} Tag that is an object like in {@link ranks}
- */
-function parseMinecraftTag(tag) {
-    console.log(tag);
-
-    if (tag && typeof tag === "string") {
-        let newRank = [];
-
-        // Even indexes should be formatting codes, odd indexes should be text
-        let splitTag = tag.split(/§([a-f0-9])/);
-        splitTag.unshift('f'); // Beginning is always going to be white (typically empty though)
-
-        for (let i = 0; i < splitTag.length; i++) {
-            let j = Math.floor(i / 2); // First index
-            let k = i % 2; // Second index
-
-            if (!newRank[j]) newRank[j] = [];
-            if (!newRank[j][k]) newRank[j][k] = [];
-            newRank[j][k] = splitTag[i];
-        }
-
-        return newRank;
-    } else return [
-        ['f', '']
-    ]
 }
 
 const defaultPlusColor = 'c'; // %p
