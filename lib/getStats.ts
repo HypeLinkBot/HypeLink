@@ -10,7 +10,7 @@ const rawData = async (username, callback) => {
     callback(response);
 }
 
-const getUser = async (username) => {
+const getUser = async (username, fetchguild) => {
     let response = await grab(`https://api.hypixel.net/player?key=${key}&name=${username}`)
     response = await response.json();
 
@@ -42,25 +42,29 @@ const getUser = async (username) => {
         }
     }
 
-    let guildData = await grab(`https://api.slothpixel.me/api/guilds/${player.displayname}`);
+    if (!fetchguild) return returnObject;
+
+    let guildData = await grab(`https://api.hypixel.net/guild?key=${key}&player=${player.uuid}`);
     guildData = await guildData.json();
 
     if (guildData) {
-        if (guildData.error) return;
+        if (guildData.guild && guildData.success) {
+            guildData = guildData.guild;
 
-        let guildObj = {
-            name: guildData.name,
-            id: guildData.id,
-            rank: "Member"
-        }
+            let guildObj = {
+                name: guildData.name,
+                id: guildData['_id'],
+                rank: 'Member'
+            }
 
-        if (guildData.members !== null) {
-            guildData.members.forEach(member => {
-                if (member.uuid == player.uuid)
-                    return guildObj.rank = member.rank;
-            })
+            if (guildData.members !== undefined) {
+                guildData.members.forEach(member => {
+                    if (member.uuid == player.uuid)
+                        return guildObj.rank = member.rank;
+                })
 
-            returnObject.guild = guildObj;
+                returnObject.guild = guildObj;
+            }
         }
     }
 

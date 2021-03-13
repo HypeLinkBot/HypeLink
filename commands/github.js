@@ -22,7 +22,7 @@ module.exports = {
                     .setColor(e.red)
                     .setDescription(`${e.x} **Please enable DMs from server members.**`);
                 message.channel.send(embed).then((newmsg) => {
-                    newmsg.delete({ timeout: 4000 });
+                    newmsg.delete({ timeout: 10000 });
                 });
             });
         } else {

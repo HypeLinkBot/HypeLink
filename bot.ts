@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const consola = require('consola');
+const grab = require('node-fetch');
 const fs = require('fs');
 
 const db = require('quick.db');
@@ -25,8 +26,8 @@ for (const file of commandFiles) {
 const Fuse = require('fuse.js');
 const fuse = new Fuse(commandList, {
     includeScore: true,
-    threshold: 0.3,
-    minMatchCharLength: 2
+    threshold: 0.2,
+    minMatchCharLength: 3
 });
 
 const getUserCount = () => {
@@ -61,15 +62,23 @@ process.on('unhandledRejection', (reason, p) => {
     console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
 });
 
+let channelCooldowns = {};
 client
     // .on('debug', consola.log)
     .on('error', consola.error)
     .on('warn', consola.warn)
-    .on('ready', () => {
+    .on('ready', async () => {
+        await updateSkyblockZScammerlist();
+        backupDatabase();
+
         consola.success(`Logged in as ${client.user.tag} (${client.user.id})`);
 
         getNextStatus();
         setInterval(getNextStatus, 5000);
+
+        setInterval(() => {
+            channelCooldowns = {};
+        }, 10000)
     })
     .on('disconnect', () => { console.warn('Disconnected'); })
     .on('reconnecting', () => { console.warn('Reconnecting'); })
@@ -77,7 +86,7 @@ client
         consola.info(`😳 Added to ${guild.name} (${guild.id})`);
     })
     .on('guildDelete', guild => {
-        if (guild.deleted) return;
+        if (guild.name == undefined) return;
         consola.info(`😭 Removed from ${guild.name} (${guild.id})`);
     })
     .on('message', async message => {
@@ -97,6 +106,22 @@ client
         } else return;
 
         let command = args.shift().toLowerCase();
+
+        if (!client.commands.has(command)) {
+            let startingCommand = command;
+            client.commands.forEach(cmd => {
+                if (cmd.alias.indexOf(command) !== -1) {
+                    return command = cmd.name;
+                }
+            })
+
+            if (command == startingCommand) {
+                const fuseResult = fuse.search(command);
+
+                if (fuseResult.length < 1) return;
+                command = fuseResult[0].item;
+            }
+        }
 
         if (message.guild) {
             let channelPermissions = message.channel.permissionsFor(client.user);
@@ -126,25 +151,17 @@ client
             }
         }
 
-        if (!client.commands.has(command)) {
-            let startingCommand = command;
-            client.commands.forEach(cmd => {
-                if (cmd.alias.indexOf(command) !== -1) {
-                    return command = cmd.name;
-                }
-            })
-
-            if (command == startingCommand) {
-                const fuseResult = fuse.search(command);
-
-                if (fuseResult.length < 1) return;
-                command = fuseResult[0].item;
-            }
-        }
+        const currChannelCooldown = channelCooldowns[message.channel.id]
+        if (currChannelCooldown !== undefined) {
+            if (currChannelCooldown > 3) return;
+            channelCooldowns[message.channel.id] += 1;
+        } else channelCooldowns[message.channel.id] = 0;
 
         try {
             const selectedCommand = client.commands.get(command);
             let guildOnly = selectedCommand.guild;
+
+            console.log(`${message.author.tag} | ${prefix}${command} ${args.join(' ')}`);
 
             if (guildOnly && !message.guild) {
                 return message.channel.send(
@@ -168,5 +185,29 @@ client
             ).catch();
         }
     })
+
+const backupDatabase = () => {
+    fs.copyFile(
+        'json.sqlite',
+        `backups/${Date.now()}.sqlite`,
+        fs.constants.COPYFILE_EXCL,
+        (err) => {
+            if (err) throw err;
+            consola.success('Backed up database');
+        }
+    )
+}
+
+const updateSkyblockZScammerlist = async () => {
+    let res = await grab('https://raw.githubusercontent.com/skyblockz/pricecheckbot/master/scammer.json');
+    res = await res.json();
+
+    fs.writeFileSync('scammerlist.json', JSON.stringify(res));
+
+    consola.success('Updated scammerlist.json');
+}
+
+setInterval(backupDatabase, 30 * 60 * 1000);
+setInterval(updateSkyblockZScammerlist, 45 * 60 * 1000)
 
 client.login(config.bot_token);

@@ -106,7 +106,7 @@ module.exports = {
         const embed = new Discord.MessageEmbed()
             .setTitle(`✨ ${username} Overview`)
             .setColor('#FFCE63')
-            .setThumbnail(avatar + '?' + new Date().getTime())
+            .setThumbnail(avatar + '?hour=' + new Date().getHours() + '&overlay=true')
             .setFooter(`UUID: ${id}`);
 
         if (names.length > 0) {

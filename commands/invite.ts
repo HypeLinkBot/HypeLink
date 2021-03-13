@@ -8,13 +8,13 @@ module.exports = {
     description: 'DMs you the bot\'s invite link',
     cat: 'other',
     guild: false,
-    alias: ['inv', 'i'],
+    alias: ['inv'],
     execute(message, args, client, prefix) {
         const invite = new Discord.MessageEmbed()
-            .setColor('YELLOW')
+            .setColor(e.default)
             .setDescription(
-                `:pleading_face: **How to Invite**\n` +
-                `[Click here](${invite_link}) or visit https://bonk.ml/invite\n\n`
+                `:pleading_face: **Bot Invite**\n` +
+                `[Click here](http://bonk.ml/invite) to invite me to your own server.\n\n`
             ).setFooter(`Bot by ${owner.tag} | https://bonk.ml/`, owner.avatarURL)
 
         if (message.guild) {
@@ -24,12 +24,13 @@ module.exports = {
                 const embed = new Discord.MessageEmbed()
                     .setColor(e.red)
                     .setDescription(`${e.x} **Please enable DMs from server members.**`);
-                message.channel.send(embed).then((newmsg) => {
-                    newmsg.delete({ timeout: 10000 }).catch();
+                message.channel.send(embed).then(newMessage => {
+                    newMessage.delete({
+                            timeout: 10000
+                    }).catch();
                 });
             });
-        } else {
+        } else
             message.author.send(invite).catch();
-        }
     },
 };

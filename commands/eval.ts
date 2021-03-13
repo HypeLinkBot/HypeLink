@@ -21,7 +21,11 @@ module.exports = {
             return `Shard ${id} will now restart.`;
         }
 
-        if (message.author.id !== owner.id) return message.channel.send(':flushed:').then((newmsg) => { newmsg.delete({ timeout: 4000 }).catch() }).catch();
+        if (message.author.id !== owner.id)
+            return message.channel.send(':flushed:')
+                .then(newmsg => {
+                    newmsg.delete({ timeout: 4000 }).catch()
+                }).catch();
         try {
             const code = args.join(" ");
             let evaled = eval(code);

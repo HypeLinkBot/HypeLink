@@ -26,7 +26,8 @@ module.exports = {
                 if (member.hasPermission('ADMINISTRATOR')) {
                     errorDM +=
                         `*Because you have administrator, you can change*\n` +
-                        `*this by doing \`${prefix}whitelist\` in <#${channel.id}>`;
+                        `*this by sending \`${prefix}whitelist\` in <#${channel.id}> or*\n` +
+                        `*doing \`${prefix}whitelist reset\` to remove it.*`;
                 }
 
                 message.author.send(
@@ -98,7 +99,7 @@ module.exports = {
         )
 
         const username = args.join('');
-        const info = await getUser(username);
+        const info = await getUser(username, db.get(`${guildID}.guild_name`));
 
         if (info.error) {
             return loadingMessage.edit(
@@ -121,6 +122,59 @@ module.exports = {
                         `\`${info.name}\`'s set Discord (\`${info.discord}\`)\n` +
                         `doesn't match your tag (\`${verifyingTag}\`)\n\n` +
                         `👉 **For linking instructions, send \`${prefix}guide\`** 👈`
+                    )
+            ).catch();
+        }
+
+        const sbzcheck = db.get(`${guildID}.sbz_scammers`);
+        if (sbzcheck == false) {
+            const isScammer = require('../scammerlist.json')[info.uuid];
+            if (isScammer) {
+                let errorMessage = `${e.x} **You're banned from SkyblockZ**\n` +
+                    `Known SkyblockZ scammers can't verify in this server.`;
+
+                if (member.hasPermission('MANAGE_GUILD'))
+                    errorMessage +=
+                        `\n\n` +
+                        `*Since you have \`Manage Guild\` permissions, send*\n` +
+                        `*\`${prefix}set AllowSBZScammers true\` to disable this*`
+
+                return loadingMessage.edit(
+                    new Discord.MessageEmbed()
+                        .setColor(e.red)
+                        .setDescription(
+                            errorMessage
+                        )
+                ).catch();
+            }
+        }
+
+        const guildMatch = db.get(`${guildID}.guild_match`);
+        const serverGuild = db.get(`${guildID}.guild_name`);
+        let matches = true;
+        if (guildMatch) {
+            if (serverGuild !== null && serverGuild !== false) {
+                if (info.guild) {
+                    if (info.guild.name.toLowerCase() !== serverGuild.toLowerCase()) matches = false;
+                } else matches = false;
+            }
+        }
+
+        if (!matches) {
+            let errorMessage = `${e.x} **Guild Mismatch :sob:**\n` +
+                `You must be in the Hypixel guild \`${serverGuild}\` to verify in this server.`;
+
+            if (member.hasPermission('MANAGE_GUILD'))
+                errorMessage +=
+                    `\n\n` +
+                    `*Since you have \`Manage Guild\` permissions, send*\n` +
+                    `*\`${prefix}set GuildMatch false\` to disable this*`
+
+            return loadingMessage.edit(
+                new Discord.MessageEmbed()
+                    .setColor(e.red)
+                    .setDescription(
+                        errorMessage
                     )
             ).catch();
         }
@@ -163,23 +217,35 @@ module.exports = {
 
         if (!successfullyVerified) return;
 
+        let customEmoji = '';
+
+        if (info.uuid)
+        switch (info.name.toLocaleString()) {
+            case 'foobball':
+            case 'xdabdoub':
+                customEmoji = ':heart: '
+                break;
+        }
+
         let successMsg =
             `${e.check} **You're all set**!\n` +
-            `<@!${message.author.id}> verified as \`${info.name}\``
+            `<@!${message.author.id}> verified as ${customEmoji}\`${info.name.replace(/_/g, '\\_')}\``
 
         if (info.guild) {
             successMsg +=
                 `\nfrom guild \`${info.guild.name}\``;
         }
 
-        successMsg +=
-            `\n\n<:namemc:810626872990892083> [NameMC Profile](https://namemc.com/${info.uuid})\n` +
-            `📈 [Hypixel Stats](https://plancke.io/hypixel/player/stats/${info.uuid})`;
-
+        const verifyLinks = db.get(`${guildID}.verify_links`);
+        if (verifyLinks !== false) {
+            successMsg +=
+                `\n\n<:namemc:810626872990892083> [NameMC Profile](https://namemc.com/${info.uuid})\n` +
+                `📈 [Hypixel Stats](https://plancke.io/hypixel/player/stats/${info.uuid})`;
+        }
 
         const successEmbed = new Discord.MessageEmbed()
             .setColor(e.green)
-            .setThumbnail('https://crafatar.com/avatars/' + info.uuid)
+            .setThumbnail('https://crafatar.com/avatars/' + info.uuid + '?overlay=true&rand=' + Date.now())
             .setDescription(
                 successMsg
             )

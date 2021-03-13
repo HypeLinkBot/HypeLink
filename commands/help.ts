@@ -12,7 +12,7 @@ module.exports = {
         const invite = new Discord.MessageEmbed()
             .setColor('#ff85e4')
             .setTitle('HypeLink Commands')
-            .setThumbnail('https://bonk.ml/circle_256.png?new')
+            // .setThumbnail('https://bonk.ml/circle_256.png?new')
             .setDescription(
                 `[] = Required, () = Optional`
             )
@@ -43,6 +43,11 @@ module.exports = {
                 `\`${prefix}report [problem]\` - Report a user or problem with the bot\n` +
                 `\`${prefix}support\` - Gives you the bot's support server\n` +
                 `\`${prefix}suggest [suggestion]\` - Suggest a feature for the bot\n`
+            )
+            .addField(
+                '_ _',
+                `${e.logo} Hypixel Thread: https://hypixel.net/threads/hypelink-hypixel-and-discord-verification-bot.3843125/\n` +
+                    `<:HypeLinkPink:818691892774174731> Website: https://bonk.ml/`
             )
             .setFooter(
                 `Bot by ${owner.tag} - https://bonk.ml/`,

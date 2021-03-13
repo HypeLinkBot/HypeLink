@@ -9,7 +9,20 @@ module.exports = {
     alias: ['sug', 'suggestion', 'request'],
     guild: false,
     execute(message, args, client, prefix) {
-        const suggestchannel = client.channels.cache.get(suggest_channel);
+        let blacklist = require('../blacklist.json').reportandsuggest;
+        if (blacklist.indexOf(message.author.id) > -1) {
+            return message.channel.send(
+                new Discord.MessageEmbed()
+                    .setColor(e.red)
+                    .setTitle(`${e.x} Suggestion Blacklist`)
+                    .setDescription(
+                        `You're blacklisted from using the suggest command for HypeLink.\n\n` +
+                        `Join the support server using \`${prefix}support\` for more information.`
+                    )
+            ).catch();
+        }
+
+        const suggestChannel = client.channels.cache.get(suggest_channel);
 
         if (args.join(' ').length < 10) {
             const embed = new Discord.MessageEmbed()
@@ -19,17 +32,20 @@ module.exports = {
                 if (message.guild) newmsg.delete({ timeout: 10000 }).catch();
             });
         } else {
-            suggestchannel.send(`${message.author.tag} | ${message.author.id}\n${args.join(' ').substr(0, 1000)}`).then(() => {
+            suggestChannel.send(`${message.author.tag} | ${message.author.id}\n${args.join(' ').substr(0, 1000)}`).then(() => {
                 const embed = new Discord.MessageEmbed()
                     .setColor(e.green)
-                    .setDescription(`${e.check} **Suggestion submitted successfully!**\nIf your idea is added, foob will DM you 😳`);
+                    .setDescription(
+                        `${e.check} **Suggestion submitted successfully!**\n` +
+                        `**:point_right: PLEASE NOTE THAT THIS COMMAND IS FOR ONLY [HYPELINK](https://bonk.ml/) :point_left:\n` +
+                        `**If your idea is added, foob will DM you 😳`);
                 message.channel.send(embed).then((newmsg) => {
-                    if (message.guild) newmsg.delete({ timeout: 10000 }).catch();
+                    if (message.guild) newmsg.delete({ timeout: 15000 }).catch();
                 });
             }).catch(() => {
                 const embed = new Discord.MessageEmbed()
                     .setColor(e.red)
-                    .setDescription(`${e.x} **Your suggestion couldn't be submitted**\nuhhh this should never happen`);
+                    .setDescription(`${e.x} **Your suggestion couldn't be submitted**\nuhhh this should never happen, please dm foob#9889`);
                 message.channel.send(embed).then((newmsg) => {
                     if (message.guild) newmsg.delete({ timeout: 10000 }).catch();
                 });

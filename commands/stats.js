@@ -2,6 +2,7 @@ const Discord = require('discord.js');
 const e = require('../embeds.json');
 const db = require('quick.db');
 const owner = require('../owner.json');
+const os = require('os');
 
 const getUserCount = (client) => {
     let memberCount = 0;
@@ -41,32 +42,51 @@ module.exports = {
             servernum += val;
         })
 
-        const statslist = new Discord.MessageEmbed()
-            .setColor('YELLOW')
+        let total_mem = Math.floor(os.totalmem() / 1024 / 1024);
+        let free_mem = Math.floor(os.freemem() / 1024 / 1024);
+
+        const percent = Math.round(free_mem / total_mem * 10000)/ 100;
+
+        let OSseconds = Math.floor(os.uptime());
+        let OSminutes = Math.floor(OSseconds / 60);
+        let OShours = Math.floor(OSminutes / 60);
+        let OSdays = Math.floor(OShours / 24);
+
+        let OSdatestring = '';
+
+        if (OSdays !== 0) OSdatestring = `${OSdays} day${(OSdays === 1) ? '' : 's'}`;
+        else if (OShours !== 0) OSdatestring = `${OShours} hour${(OShours === 1) ? '' : 's'}`;
+        else if (OSminutes !== 0) OSdatestring = `${OSminutes} minute${(OSminutes === 1) ? '' : 's'}`;
+        else OSdatestring = `${OSseconds} second${(OSseconds === 1) ? '' : 's'}`;
+
+        const statsList = new Discord.MessageEmbed()
+            .setColor(e.default)
+            .setTitle(`:flushed: **Bot Stats**`)
             .setDescription(
-                `:flushed: **Bot Stats**\n` +
                 `🛡 **Servers**: ${servernum.toLocaleString()}\n` +
                 `👤 **Users**: ${getUserCount(client).toLocaleString()}\n` +
-                `✅ **Verifies**: ${db.get('verified').toLocaleString()}\n` +
-                `❌ **Unverifies**: ${db.get('unverified').toLocaleString()}\n` +
-                `♻ **Last restart**: ${datestring}\n\n` +
-                `**Bot Owner:** \`${owner.tag}\``
+                `✅ **Verified**: ${db.get('verified').toLocaleString()}\n\n` +
+                // `❌ **Unverifies**: ${db.get('unverified').toLocaleString()}\n` +
+                `♻ **Last restart**: ${datestring}\n` +
+                `📥 **Uptime**: ${OSdatestring}\n` +
+                `💻 **Memory**: ${percent}% in use`
             )
+            .setFooter(`Bot by ${owner.tag} | https://bonk.ml/`, owner.avatarURL)
 
-
-        if (message.guild) {
-            message.author.send(statslist).then(() => {
-                message.react('👌');
+        if (message.guild)
+            message.author.send(statsList).then(() => {
+                message.react('👌').catch();
             }).catch(() => {
                 const embed = new Discord.MessageEmbed()
                     .setColor(e.red)
                     .setDescription(`${e.x} **Please enable DMs from server members.**`);
-                message.channel.send(embed).then((newmsg) => {
-                    newmsg.delete({ timeout: 4000 });
-                });
+
+                message.channel.send(embed).then(newMessage => {
+                    newMessage.delete({
+                        timeout: 10000
+                    }).catch();
+                }).catch();
             });
-        } else {
-            message.author.send(statslist).catch();
-        }
+        else message.author.send(statsList).catch();
     },
 };
