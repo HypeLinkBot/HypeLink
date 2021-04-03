@@ -111,6 +111,12 @@ const getInfoForSetting = (guildID, settingName) => {
             finalSettings.fancy = `AllowSBZScammers`;
             finalSettings.default = true;
             break;
+        case 'deleteverifymsgs':
+            finalSettings.dbval = 'ver_messages';
+            finalSettings.desc = `Delete verification messages after a user successfully verifies.`;
+            finalSettings.fancy = `DeleteVerifyMsgs`;
+            finalSettings.default = false;
+            break;
         case 'guildname':
             finalSettings.dbval = 'guild_name';
             finalSettings.desc =
@@ -143,6 +149,7 @@ const updateSetting = async (guild, settingName, newValue, client) => {
         case 'verifylinks':
         case 'guildmatch':
         case 'allowsbzscammers':
+        case 'deleteverifymsgs':
             let validated = validateDefault(newValue);
             let settingValue = getInfoForSetting(guild.id, settingName);
             if (validated == null) {
@@ -212,6 +219,7 @@ module.exports = {
                 ``,
                 `${gi('dmverify')} ☆ \`DMVerify\` ☆ DMs a user once they're verified.`,
                 `${gi('dmunverify')} ☆ \`DMUnverify\` ☆ DMs a user once they're unverified.`,
+                `${gi('deleteverifymsgs')} ☆ \`DeleteVerifyMsgs\` ☆ Deletes verification messages once a user is verified.`,
                 `${gi('removeroleonverify')} ☆ \`RemoveRoleOnVerify\` ☆ Remove a role once a user is verified.`,
                 ``,
                 `🛡️ **__Guild Configuration__**`,

@@ -42,7 +42,7 @@ const setStatus = (text) => {
     client.user.setActivity({
         name: "https://bonk.ml/ | " + text,
         type: 'PLAYING'
-    });
+    }).catch();
 }
 
 let currentStatus = 0;
@@ -59,18 +59,40 @@ const getNextStatus = () => {
 }
 
 process.on('unhandledRejection', (reason, p) => {
-    console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
+    const errorChannel = client.channels.cache.get(config.error_channel);
+
+    if (!errorChannel) return;
+    errorChannel.send(
+        new Discord.MessageEmbed()
+            .setTitle(':sob: Promise Rejection')
+            .setColor(e.red)
+            .addField('Output', `\`\`\`\n${reason}\n\`\`\``, false)
+            .addField('Guild', `${lastRanCommand.guildname} (${lastRanCommand.guild})`, true)
+            .addField('Channel', `${lastRanCommand.channel}`, true)
+            .addField('Author', `${lastRanCommand.tag} (${lastRanCommand.author})`, true)
+            .addField('Command', lastRanCommand.pretty, false)
+            .setTimestamp()
+    ).catch();
 });
 
+let lastRanCommand = {
+    guild: null,
+    guildname: null,
+    channel: null,
+    author: null,
+    tag: null,
+    messageid: null,
+    prefix: null,
+    command: null,
+    args: null,
+    pretty: null
+};
 let channelCooldowns = {};
 client
     // .on('debug', consola.log)
     .on('error', consola.error)
     .on('warn', consola.warn)
     .on('ready', async () => {
-        await updateSkyblockZScammerlist();
-        backupDatabase();
-
         consola.success(`Logged in as ${client.user.tag} (${client.user.id})`);
 
         getNextStatus();
@@ -79,6 +101,9 @@ client
         setInterval(() => {
             channelCooldowns = {};
         }, 10000)
+
+        await updateSkyblockZScammerlist();
+        backupDatabase();
     })
     .on('disconnect', () => { console.warn('Disconnected'); })
     .on('reconnecting', () => { console.warn('Reconnecting'); })
@@ -86,7 +111,7 @@ client
         consola.info(`😳 Added to ${guild.name} (${guild.id})`);
     })
     .on('guildDelete', guild => {
-        if (guild.name == undefined) return;
+        if (guild.name === undefined) return;
         consola.info(`😭 Removed from ${guild.name} (${guild.id})`);
     })
     .on('message', async message => {
@@ -115,7 +140,7 @@ client
                 }
             })
 
-            if (command == startingCommand) {
+            if (command === startingCommand) {
                 const fuseResult = fuse.search(command);
 
                 if (fuseResult.length < 1) return;
@@ -153,7 +178,7 @@ client
 
         const currChannelCooldown = channelCooldowns[message.channel.id]
         if (currChannelCooldown !== undefined) {
-            if (currChannelCooldown > 3) return;
+            if (currChannelCooldown > 2) return;
             channelCooldowns[message.channel.id] += 1;
         } else channelCooldowns[message.channel.id] = 0;
 
@@ -161,7 +186,20 @@ client
             const selectedCommand = client.commands.get(command);
             let guildOnly = selectedCommand.guild;
 
-            console.log(`${message.author.tag} | ${prefix}${command} ${args.join(' ')}`);
+            lastRanCommand = {
+                guild: message.guild ? message.guild.id : 'No ID',
+                guildname: message.guild ? message.guild.name : 'DMs',
+                channel: message.channel.id,
+                author: message.author.id,
+                tag: message.author.tag,
+                messageid: message.id,
+                prefix,
+                command,
+                args,
+                pretty: `${prefix}${command} ${args.join(' ')}`
+            }
+
+            consola.log(`${lastRanCommand.guildname} | ${lastRanCommand.tag} | ${lastRanCommand.pretty}`);
 
             if (guildOnly && !message.guild) {
                 return message.channel.send(
@@ -207,7 +245,7 @@ const updateSkyblockZScammerlist = async () => {
     consola.success('Updated scammerlist.json');
 }
 
-setInterval(backupDatabase, 30 * 60 * 1000);
-setInterval(updateSkyblockZScammerlist, 45 * 60 * 1000)
+setInterval(backupDatabase, 12 * 60 * 60 * 1000); // 12 hours
+setInterval(updateSkyblockZScammerlist, 2 * 60 * 60 * 1000) // 2 hours
 
-client.login(config.bot_token);
+client.login(config.dev_token).catch();

@@ -2,7 +2,8 @@ const db = require('quick.db');
 const Discord = require('discord.js');
 const e = require('../embeds.json');
 const consola = require('consola');
-const getUser = require('../lib/getStats.ts').getUser;
+const owner = require('../owner.json');
+const getUser = require('../lib/getStats.js').getUser;
 
 module.exports = {
     name: 'verify',
@@ -43,16 +44,32 @@ module.exports = {
         let verificationRoleID = db.get(`${guildID}.roles.verified`);
         let verificationRole = guild.roles.cache.get(verificationRoleID);
 
+        let sampleTag = message.author.tag;
+        let validChars = 'qwertyuiopasdfghjklzxcvbnm1234567890-_ :/\\.+=[]{}\'"\`~'.split('');
+
+        for (let charIndex in message.author.username) {
+            let char = message.author
+                .username[charIndex].toLowerCase();
+
+            if (validChars.indexOf(char) == -1) sampleTag =
+                `${message.author.id}#${message.author.discriminator}`
+        }
+
         if (args.join(' ').length < 2) {
             return channel.send(
-                `**${e.check} Verification Instructions**:\n` +
-                ` • Log on to Hypixel\n` +
-                ` • Right-click your head in the main lobby\n` +
-                ` • Left-click \`Social Media\`\n` +
-                ` • Left-click \`Discord\`\n` +
-                ` • Type your Discord tag (\`${message.author.tag}\`) in chat\n` +
-                ` • Send \`${prefix}${this.name} [Your Minecraft Username]\` here\n` +
-                `**Video Guide:** https://youtu.be/355yO2lVOXg`
+                new Discord.MessageEmbed()
+                    .setTitle(':white_check_mark: Verification Instructions')
+                    .setDescription(
+                        `_ _• Log on to <:logo:791084884398702632> \`mc.hypixel.net\`\n` +
+                        ` • Right-click your head in the main lobby\n` +
+                        ` • Left-click \`Social Media\`\n` +
+                        ` • Left-click <:DISCORD:815301286874185759> \`Discord\`\n` +
+                        ` • Type \`${sampleTag}\` in chat\n` +
+                        ` • Send \`${prefix}verify Your IGN\` here\n\n` +
+                        `**Video Guide:** [youtu.be/355yO2lVOXg](https://youtu.be/355yO2lVOXg)`
+                    )
+                    .setColor(e.default)
+                    .setFooter(`Bot by ${owner.tag} | https://bonk.ml/`, owner.avatarURL)
             ).catch();
         }
 
@@ -98,7 +115,10 @@ module.exports = {
                 )
         )
 
-        const username = args.join('');
+        const username = args.join('')
+            .replace(/\\/g, '')
+            .replace(/\[/g, '')
+            .replace(/\\]/g, '');
         const info = await getUser(username, db.get(`${guildID}.guild_name`));
 
         if (info.error) {
@@ -107,13 +127,16 @@ module.exports = {
                     .setColor(e.red)
                     .setDescription(
                         `${e.x} **${info.errorMsg} :sob:**\n` +
-                        `Double check your username and try again.`
+                        `Make sure your username is correct!`
                     )
+                    .setFooter(`Bot by ${owner.tag} | https://bonk.ml/`, owner.avatarURL)
             ).catch();
         }
 
         const verifyingTag = message.author.tag;
-        if (verifyingTag !== info.discord) {
+        const otherTag = `${message.author.id}#${message.author.discriminator}`
+
+        if (verifyingTag !== info.discord && otherTag !== info.discord) {
             return loadingMessage.edit(
                 new Discord.MessageEmbed()
                     .setColor(e.red)
@@ -193,6 +216,13 @@ module.exports = {
                 ).catch();
             })
 
+        const changeNick = db.get(`${guildID}.change_nick`);
+        if (changeNick == true || changeNick == null) {
+            member.setNickname(info.name, info.uuid).catch(() => {});
+        }
+
+        const delVerMsgsSetting = db.get(`${guildID}.ver_messages`);
+
         const rankRoleSetting = db.get(`${guildID}.rank_role`);
         if (rankRoleSetting == null || rankRoleSetting == true) {
             if (info.rank) {
@@ -218,30 +248,24 @@ module.exports = {
         if (!successfullyVerified) return;
 
         let customEmoji = '';
+        const customTags = require('../customtags.json');
 
-        if (info.uuid)
-        switch (info.name.toLocaleString()) {
-            case 'foobball':
-            case 'xdabdoub':
-                customEmoji = ':heart: '
-                break;
-        }
+        if (customTags[info.uuid])
+            customEmoji = ` ${customTags[info.uuid].emoji}`;
 
         let successMsg =
             `${e.check} **You're all set**!\n` +
             `<@!${message.author.id}> verified as ${customEmoji}\`${info.name.replace(/_/g, '\\_')}\``
 
-        if (info.guild) {
+        if (info.guild)
             successMsg +=
                 `\nfrom guild \`${info.guild.name}\``;
-        }
 
         const verifyLinks = db.get(`${guildID}.verify_links`);
-        if (verifyLinks !== false) {
+        if (verifyLinks !== false)
             successMsg +=
                 `\n\n<:namemc:810626872990892083> [NameMC Profile](https://namemc.com/${info.uuid})\n` +
                 `📈 [Hypixel Stats](https://plancke.io/hypixel/player/stats/${info.uuid})`;
-        }
 
         const successEmbed = new Discord.MessageEmbed()
             .setColor(e.green)
@@ -253,7 +277,14 @@ module.exports = {
         db.add('verified', 1);
         db.set(`users.${message.author.id}`, info.uuid)
 
-        loadingMessage.edit(successEmbed).catch();
+        if (delVerMsgsSetting) message.delete().catch();
+        loadingMessage.edit(successEmbed)
+            .then(newMessage => {
+                if (delVerMsgsSetting)
+                    newMessage.delete({
+                        timeout: 7000
+                    });
+            }).catch();
 
         const removeRole = db.get(`${guildID}.remove_verify`);
         consola.success(`${message.author.tag} successfully verified as ${info.name} in ${guild.name}`);
@@ -263,8 +294,8 @@ module.exports = {
                 member.roles.remove(removeRole).catch(() => {
                     channel.send(
                         new Discord.MessageEmbed()
-                        .setColor(e.red)
-                        .setDescription(`${e.x} Unable to remove the role <@!${removeRole}> role.`)
+                            .setColor(e.red)
+                            .setDescription(`${e.x} Unable to remove the role <@!${removeRole}> role.`)
                     ).catch()
                 });
             }

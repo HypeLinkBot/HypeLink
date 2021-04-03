@@ -1,7 +1,7 @@
 const { ShardingManager } = require('discord.js');
 const consola = require('consola');
 const db = require('quick.db');
-const manager = new ShardingManager('./bot.ts', {
+const manager = new ShardingManager('./bot.js', {
     token: require('./config.json').bot_token,
     totalShards: 1
 });

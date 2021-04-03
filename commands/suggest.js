@@ -11,6 +11,7 @@ module.exports = {
     execute(message, args, client, prefix) {
         let blacklist = require('../blacklist.json').reportandsuggest;
         if (blacklist.indexOf(message.author.id) > -1) {
+            console.log('blacklisted mf ' + message.author.tag);
             return message.channel.send(
                 new Discord.MessageEmbed()
                     .setColor(e.red)
@@ -45,7 +46,7 @@ module.exports = {
             }).catch(() => {
                 const embed = new Discord.MessageEmbed()
                     .setColor(e.red)
-                    .setDescription(`${e.x} **Your suggestion couldn't be submitted**\nuhhh this should never happen, please dm foob#9889`);
+                    .setDescription(`${e.x} **Your suggestion couldn't be submitted**\nuhhh this should never happen`);
                 message.channel.send(embed).then((newmsg) => {
                     if (message.guild) newmsg.delete({ timeout: 10000 }).catch();
                 });

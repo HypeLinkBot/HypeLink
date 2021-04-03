@@ -13,8 +13,8 @@ module.exports = {
             .setColor('YELLOW')
             .setDescription(
                 `:flushed: **Donation link**\n` +
-                `[paypal.me/foobball](https://paypal.me/foobball)\n\n` +
-                `thank you so much :heart::pleading_face:`
+                `[ko-fi.com/foobball](https://ko-fi.com/foobball)\n\n` +
+                `put your favorite emoji in the donation message :)`
             ).setFooter(`Bot by ${owner.tag} | https://bonk.ml/`, owner.avatarURL)
 
         if (message.guild) {

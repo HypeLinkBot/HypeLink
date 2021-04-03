@@ -56,7 +56,7 @@ module.exports = {
 
         if (message.guild) {
             message.author.send(invite).then(() => {
-                message.react('✅');
+                message.react('✅').catch();
             }).catch(() => {
                 const embed = new Discord.MessageEmbed()
                     .setColor(e.red)
