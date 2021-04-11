@@ -1,5 +1,5 @@
-# HypeLink
-Hypixel and Discord verification bot. (basically HyVerify 2)
+# This repo is just for code reference, if you want to see how I made certain commands and such and use it in your own projects.
+It won't be as up to date as the public bot.
 ---
 I started working on bots again and decided to remake HyVerify since it was a mess 😳
 
@@ -31,4 +31,4 @@ Refer to the bot's [Hypixel thread](https://hypixel.net/threads/hypelink-hypixel
 
 ---
 
-im no longer providing instructions on how to host this locally because im tired of maintaining it.
+I'm not providing instructions on how to host the bot yourself, this repo is just for reference.
