@@ -4,6 +4,24 @@ const Discord = require('discord.js');
 const e = require('../embeds.json');
 const config = require('../config.json');
 
+const timeout = (ms, promise) => {
+    return new Promise((resolve, reject) => {
+        const timer = setTimeout(() => {
+            reject(new Error('TIMEOUT'))
+        }, ms)
+
+        promise
+            .then(value => {
+                clearTimeout(timer)
+                resolve(value)
+            })
+            .catch(reason => {
+                clearTimeout(timer)
+                reject(reason)
+            })
+    })
+}
+
 module.exports = {
     name: 'user',
     description: '📈 User stat websites',
@@ -33,13 +51,24 @@ module.exports = {
             return message.channel.send(new Discord.MessageEmbed().setDescription(`${e.x} **Player not found**\nIf you think this is a mistake, contact \`foob#9889\`.`).setColor(e.red))
         }
 
-        let hypixelstats = await fetch(`https://api.slothpixel.me/api/players/${userid}?key=${config.hypixel_key}`)
+        let timedOut = false;
+        let hypixelstats = await timeout(2000, fetch(`https://api.slothpixel.me/api/players/${userid}?key=${config.hypixel_key}`))
+            .catch(() => {
+                timedOut = true;
+            });
+
+        if (timedOut) {
+            message.channel.stopTyping();
+            return message.channel.send(
+                new Discord.MessageEmbed()
+                    .setDescription(`${e.x} **Hypixel couldn't be reached**\nPlease wait a bit before trying again.`)
+                    .setColor(e.red)
+            )
+        }
         hypixelstats = await hypixelstats.json();
 
         let socialmedia = hypixelstats.links;
         let socialmediastr = '';
-
-        console.log(socialmedia);
 
         if (socialmedia) {
             if (socialmedia.YOUTUBE) {

@@ -19,7 +19,7 @@ module.exports = {
         let verifiedRole = guild.roles.cache.get(verifiedRoleID);
         const allowUnverify = db.get(`${guild.id}.allow_unverify`);
 
-        if (allowUnverify == false) {
+        if (allowUnverify === false) {
             let errorMessage = `${e.x} **You can't unverify in this server**\n`;
 
             if (member.hasPermission('ADMINISTRATOR'))
@@ -37,7 +37,7 @@ module.exports = {
         }
 
         if (verifiedRole == null) {
-            const HyVerifyRole = guild.roles.cache.find(r => r.name == 'Hypixel Verified');
+            const HyVerifyRole = guild.roles.cache.find(r => r.name === 'Hypixel Verified');
             if (HyVerifyRole !== undefined && HyVerifyRole !== null) {
                 db.set(`${guild.id}.roles.verified`, HyVerifyRole.id);
                 verifiedRole = HyVerifyRole;
@@ -68,9 +68,7 @@ module.exports = {
             new Discord.MessageEmbed()
                 .setColor(e.default)
                 .setDescription(`${e.loading} Unverifying you...`)
-        ).catch(() => {
-            return;
-        });
+        ).catch(() => {});
 
         const serverRoles = db.get(`${guild.id}.roles`);
         let serverIDs = Object.keys(serverRoles);
@@ -106,7 +104,7 @@ module.exports = {
         ).then(() => {
             db.add('unverified', 1);
 
-            if (db.get(`${message.guild.id}.dm_unverify`) == true) {
+            if (db.get(`${message.guild.id}.dm_unverify`) === true) {
                 message.author.send(
                     new Discord.MessageEmbed()
                         .setColor(e.green)
