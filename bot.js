@@ -248,4 +248,4 @@ const updateSkyblockZScammerlist = async () => {
 setInterval(backupDatabase, 12 * 60 * 60 * 1000); // 12 hours
 setInterval(updateSkyblockZScammerlist, 2 * 60 * 60 * 1000) // 2 hours
 
-client.login(config.dev_token).catch();
+client.login(config.bot_token).catch();
