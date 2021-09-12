@@ -1,0 +1,15 @@
+{
+    "hypixel_key": "hypixel api key",
+    "bot_token": "live bot token here",
+    "dev_token": "dev bot token here",
+    "invite_link": "https://hl.foob.cc/invite",
+
+    "report_channel": "123123123",
+    "suggest_channel": "123123123",
+    "error_channel": "123123123",
+    "logs_channel": "123123123",
+
+    "default_prefix": "!",
+    "owner": "219541416760705024",
+    "name": "HypeLink"
+}
