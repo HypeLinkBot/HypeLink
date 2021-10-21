@@ -3,7 +3,7 @@ It won't be as up to date as the public bot.
 ---
 I started working on bots again and decided to remake HyVerify since it was a mess 😳
 
-### Invite the bot to your own server by [clicking here](https://bonk.ml/invite)
+### Invite the bot to your own server by [clicking here](https://hl.foob.cc/invite)
 
 ## Commands
 
